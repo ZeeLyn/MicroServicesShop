@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  consul:
+    image: consul
+    container_name: consul_server
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8302:8302
+      - 8400:8400
+      - 8500:8500
+      - 53:53
+      - 8600:8600
+
+
+  shop.gateway.web:
+    image: ${DOCKER_REGISTRY-}shopgatewayweb
+    container_name: shop.gateway.web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Web/Dockerfile
+    ports:
+      - 9001:80
+    depends_on:
+      - consul
+    links:
+      - consul
+
+  shop.goodsservice:
+    image: ${DOCKER_REGISTRY-}shopgoodsservice
+    container_name: shop.GoodsService
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5002:5002"
+    build:
+      context: .
+      dockerfile: src/Shop.GoodsService/Dockerfile
+    depends_on:
+      - consul
+    links:
+      - consul
