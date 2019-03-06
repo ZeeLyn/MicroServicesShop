@@ -38,7 +38,7 @@ services:
     ports:
       - 9001:80
     depends_on:
-      - consul
+      - consul   
     links:
       - consul
 
