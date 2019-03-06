@@ -4,6 +4,7 @@ services:
   consul:
     image: consul
     container_name: consul_server
+    restart: always
     ports:
       - 8300:8300
       - 8301:8301
@@ -13,10 +14,22 @@ services:
       - 53:53
       - 8600:8600
 
+  mysql:
+    image: mysql:latest
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ShopDB
+    ports:
+      - 3306:3306
+    
+
 
   shop.gateway.web:
     image: ${DOCKER_REGISTRY-}shopgatewayweb
     container_name: shop.gateway.web
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     build:
@@ -32,6 +45,7 @@ services:
   shop.goodsservice:
     image: ${DOCKER_REGISTRY-}shopgoodsservice
     container_name: shop.GoodsService
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
