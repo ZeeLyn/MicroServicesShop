@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Dapper.Extensions;
+using Dapper.Extensions.MySql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,10 +24,8 @@ namespace Shop.GoodsService
                 {
                     Console.WriteLine("-------------------->" + context.HostingEnvironment.EnvironmentName);
                     builder.SetBasePath(Directory.GetCurrentDirectory());
-                    var json = Path.Combine(Directory.GetCurrentDirectory(),
-                        $"uragano.{context.HostingEnvironment.EnvironmentName}.json");
-                    Console.WriteLine(json);
-                    builder.AddJsonFile(json, true, true);
+                    builder.AddJsonFile($"appsettings.json", true, true);
+                    builder.AddJsonFile($"uragano.{context.HostingEnvironment.EnvironmentName}.json", true, true);
                     builder.AddCommandLine(args);
                 })
                 .ConfigureServices((context, service) =>
@@ -36,7 +38,11 @@ namespace Shop.GoodsService
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });
-                }).ConfigureLogging((context, builder) =>
+                }).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+                    {
+                        builder.RegisterType<MySqlDapper>().As<IDapper>().WithParameter("connectionName", "mysql")
+                            .PropertiesAutowired().InstancePerLifetimeScope();
+                    }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));
                     builder.AddConsole();
