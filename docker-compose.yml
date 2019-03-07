@@ -35,21 +35,6 @@ services:
     
 
 
-  shop.gateway.web:
-    image: ${DOCKER_REGISTRY-}shopgatewayweb
-    container_name: shop.gateway.web
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-    build:
-      context: .
-      dockerfile: src/Shop.Gateway.Web/Dockerfile
-    ports:
-      - 9001:80
-    depends_on:
-      - consul   
-    links:
-      - consul
 
   shop.goodsservice:
     image: ${DOCKER_REGISTRY-}shopgoodsservice
@@ -80,3 +65,37 @@ services:
       - mysql
     ports:
       - 5003:5003
+      
+  shop.gateway.web:
+    image: ${DOCKER_REGISTRY-}shopgatewayweb
+    container_name: shop.gateway.web
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Web/Dockerfile
+    ports:
+      - 9001:80
+    depends_on:
+      - consul   
+    links:
+      - consul
+      - shop.gateway.goods
+
+
+  shop.gateway.goods:
+    image: ${DOCKER_REGISTRY-}shopgatewaygoods
+    container_name: shop.gateway.goods
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Goods/Dockerfile
+    ports:
+      - 8002:80
+    depends_on:
+      - consul   
+    links:
+      - consul

@@ -11,8 +11,31 @@
           "Port": 8001
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/goods/{everything}",
+      "DownstreamPathTemplate": "/api/goods/{everything}",
+      "UpstreamHttpMethod": [ "get" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shop.gateway.goods",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/category/{everything}",
+      "DownstreamPathTemplate": "/api/category/{everything}",
+      "UpstreamHttpMethod": [ "get" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shop.gateway.goods",
+          "Port": 80
+        }
+      ]
     }
-
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:8080"

@@ -18,15 +18,27 @@ namespace Shop.GoodsService
             Dapper = dapper;
         }
         /// <summary>
-        /// get all goods by s
+        /// get all goods by category
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         public async Task<List<GoodsList>> GoodsList(int category)
         {
             return await Task.FromResult(
-                await Dapper.QueryAsync<GoodsList>("select * from goods where CategoryId=@categoryId",
+                await Dapper.QueryAsync<GoodsList>("select * from Goods where CategoryId=@categoryId",
                     new {categoryId = category}));
+        }
+
+        /// <summary>
+        /// get specified goods by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<GoodsList> GoodsInfo(int id)
+        {
+            return await Task.FromResult(
+                await Dapper.QueryFirstOrDefaultAsync<GoodsList>("select * from Goods where id=@id",
+                    new { id }));
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Shop.IGoods
     {
         [ServiceRoute("GoodsList")]
         Task<List<GoodsList>> GoodsList(int category);
- 
+        [ServiceRoute("info")]
+        Task<GoodsList> GoodsInfo(int id);
     }
 }
