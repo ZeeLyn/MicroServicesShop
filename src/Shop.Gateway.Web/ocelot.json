@@ -1,0 +1,20 @@
+{
+  "ReRoutes": [
+    {
+      "UpstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamPathTemplate": "/api/account/{everything}",
+      "UpstreamHttpMethod": [ "get", "post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8001
+        }
+      ]
+    }
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8080"
+  }
+}

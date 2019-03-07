@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="uragano.Production.json" />
+    <PackageReference Include="Uragano.Abstractions" Version="0.0.1-preview.312" />
   </ItemGroup>
 
 </Project>

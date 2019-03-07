@@ -5,12 +5,30 @@
 
 <div class="text-center">
     <ul>
-        @foreach (var item in Model)
-        {
-            <li>
-                <h3>@item.Title</h3>
-                <span>@item.Price</span>
-            </li>
-        }
+        @*@foreach (var item in Model)
+            {
+                <li>
+                    <h3>@item.Title</h3>
+                    <span>@item.Price</span>
+                </li>
+            }*@
     </ul>
 </div>
+@section Scripts
+    {
+    <script>
+
+        axios.get("/api/account/register")
+            .then(function (res) {
+
+            })
+            .catch(function (err) {
+
+            })
+            .then(function () {
+
+            });
+
+
+    </script>
+}

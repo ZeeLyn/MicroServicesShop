@@ -14,6 +14,13 @@ services:
       - 53:53
       - 8600:8600
 
+  redis:
+    image: redis
+    ports:
+      - 6380:6379
+    command: redis-server --requirepass 123456
+
+
   mysql:
     image: mysql:latest
     restart: always
@@ -23,6 +30,8 @@ services:
       MYSQL_DATABASE: ShopDB
     ports:
       - 3306:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
     
 
 
@@ -49,7 +58,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
-      - "5002:5002"
+      - 5002:5002
     build:
       context: .
       dockerfile: src/Shop.GoodsService/Dockerfile
@@ -58,3 +67,16 @@ services:
     links:
       - consul
       - mysql
+
+  shop.identity:
+    image: ${DOCKER_REGISTRY-}shopidentity
+    build:
+      context: .
+      dockerfile: src/Shop.IdentityService/Dockerfile
+    depends_on:
+      - consul
+    links:
+      - consul
+      - mysql
+    ports:
+      - 5003:5003

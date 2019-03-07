@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using Uragano.Consul;
 using Uragano.Core;
 
@@ -34,7 +36,7 @@ namespace Shop.Gateway.Web
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddOcelot();
             services.AddUragano(Configuration, builder =>
              {
                  builder.AddClient();
@@ -65,6 +67,7 @@ namespace Shop.Gateway.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseOcelot().Wait();
         }
     }
 }
