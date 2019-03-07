@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Shop.Common;
 using Uragano.Abstractions;
@@ -7,11 +8,10 @@ using Uragano.Abstractions;
 namespace Shop.IGoods
 {
     [ServiceDiscoveryName("Shop.Goods")]
-    [ServiceRoute("goods")]
-    public interface IGoodsService : IService
+    [ServiceRoute("goodsCategory")]
+    public interface IGoodsCategoryService : IService
     {
-        [ServiceRoute("GoodsList")]
-        Task<List<GoodsList>> GoodsList(int category);
- 
+        [ServiceRoute("CategoryList")]
+        Task<List<GoodsCategoryBase>> List();
     }
 }

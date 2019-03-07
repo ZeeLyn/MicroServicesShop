@@ -16,14 +16,12 @@ namespace Shop.Common
 
     public class Goods : GoodsList
     {
-        public int Category { get; set; }
+        public int CategoryId { get; set; }
 
         public int Stock { get; set; }
 
         public string Description { get; set; }
 
         public DateTime CreatedTime { get; set; }
-
-        public DateTime LastUpdateTime { get; set; }
     }
 }
