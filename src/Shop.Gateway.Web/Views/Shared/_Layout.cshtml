@@ -38,6 +38,7 @@
                 </div>
             </div>
         </nav>
+        @await Component.InvokeAsync("UserProfileHeader")
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
@@ -71,6 +72,7 @@
         </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/vue/vue.js"></script>
     <script src="~/lib/axios/axios.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>

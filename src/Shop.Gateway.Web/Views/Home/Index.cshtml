@@ -1,34 +1,41 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model List<Shop.Common.GoodsList>
+<template id="app">
+    <div>
+        <ul>
+            <li v-for="item in list">
+                {{item.title}}
+            </li>
+        </ul>
+    </div>
+</template>
 
-<div class="text-center">
-    <ul>
-        @*@foreach (var item in Model)
-            {
-                <li>
-                    <h3>@item.Title</h3>
-                    <span>@item.Price</span>
-                </li>
-            }*@
-    </ul>
-</div>
 @section Scripts
     {
     <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                list: [{ id: 1, title: "abc" }],
+                loaded: false
+            },
+            mounted: function () {
+                axios.get("/api/account/register")
+                    .then(function (res) {
+                        this.loaded = true;
+                        console.log(this.loaded);
+                    })
+                    .catch(function (err) {
 
-        axios.get("/api/account/register")
-            .then(function (res) {
+                    })
+                    .then(function () {
 
-            })
-            .catch(function (err) {
+                    });
+            },
+            methods: {
 
-            })
-            .then(function () {
-
-            });
-
-
+            }
+        });
     </script>
 }
