@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Common;
+using Shop.Common.Identity;
 
 namespace Shop.Gateway.Identity.Controllers
 {
@@ -11,10 +14,10 @@ namespace Shop.Gateway.Identity.Controllers
     public class AccountController : ControllerBase
     {
         // GET api/values
-        [HttpGet("register")]
-        public ActionResult<IEnumerable<string>> Get()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]RegisterView registerView)
         {
-            return new string[] { "value1", "value2" };
+            return Ok();
         }
 
         // GET api/values/5

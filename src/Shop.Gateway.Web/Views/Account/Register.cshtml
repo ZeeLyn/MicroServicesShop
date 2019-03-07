@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Sign up";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <h1>Sign up</h1>
+</div>
+
+
+<form id="register">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Email</span>
+        </div>
+        <input type="email" class="form-control" required placeholder="" maxlength="100" v-model="email">
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Password</span>
+        </div>
+        <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="password">
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">ReEnter</span>
+        </div>
+        <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="reEnter">
+    </div>
+    <button type="button" class="btn btn-primary" v-on:click="SignUp">Sign up</button>
+</form>
+
+@section Styles{
+    <style>
+        .input-group-text { width: 90px; }
+    </style>
+}
+@section Scripts{
+    <script>
+        new Vue({
+            el: "#register",
+            data: {
+                email: null,
+                password: null,
+                reEnter: null
+            },
+            methods: {
+                SignUp: function () {
+                    axios.post("/api/account/register", {
+                        email: this.email,
+                        password: this.password
+                    })
+                        .then(function (res) {
+                            this.loaded = true;
+                            console.log(this.loaded);
+                        })
+                        .catch(function (err) {
+
+                        })
+                        .then(function () {
+
+                        });
+                }
+            }
+        });
+    </script>
+}
