@@ -19,8 +19,8 @@ namespace Shop.Gateway.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //var result = await GoodsService.List(1);
-            return View();
+            var result = await GoodsService.GoodsList(1);
+            return View(result);
         }
 
         public IActionResult Privacy()

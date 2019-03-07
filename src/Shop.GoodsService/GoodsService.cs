@@ -7,6 +7,9 @@ using Shop.IGoods;
 
 namespace Shop.GoodsService
 {
+    /// <summary>
+    /// goods service implementation
+    /// </summary>
     public class GoodsService : IGoodsService
     {
         private IDapper Dapper { get; }
@@ -14,9 +17,16 @@ namespace Shop.GoodsService
         {
             Dapper = dapper;
         }
-        public async Task<List<GoodsList>> List(int category)
+        /// <summary>
+        /// get all goods by s
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public async Task<List<GoodsList>> GoodsList(int category)
         {
-            return await Task.FromResult(await Dapper.QueryAsync<GoodsList>("select * from goods"));
+            return await Task.FromResult(
+                await Dapper.QueryAsync<GoodsList>("select * from goods where CategoryId=@categoryId",
+                    new {categoryId = category}));
         }
     }
 }
