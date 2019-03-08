@@ -23,7 +23,6 @@ namespace Shop.Gateway.Web
                     builder.SetBasePath(Directory.GetCurrentDirectory());
                     builder.AddJsonFile("appsettings.json", true, true);
                     builder.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true, true);
-                    builder.AddJsonFile($"uragano.{context.HostingEnvironment.EnvironmentName}.json");
                     builder.AddJsonFile("ocelot.json");
                 })
                 .UseStartup<Startup>();

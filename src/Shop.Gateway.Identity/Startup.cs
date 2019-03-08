@@ -9,14 +9,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Uragano.Consul;
+using Uragano.Core;
 
 namespace Shop.Gateway.Identity
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment HostingEnvironment { get; }
+
+        public Startup(IConfiguration configuration, IHostingEnvironment evn)
         {
             Configuration = configuration;
+            HostingEnvironment = evn;
         }
 
         public IConfiguration Configuration { get; }
@@ -24,7 +29,17 @@ namespace Shop.Gateway.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => { options.Filters.Add<ValidateModelStateFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidateModelStateFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddUragano(Configuration, builder =>
+            {
+                builder.AddClient();
+                builder.AddConsul();
+                //if (HostingEnvironment.IsProduction())
+                //builder.AddCircuitBreaker();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

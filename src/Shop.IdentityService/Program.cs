@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Dapper.Extensions;
 using Dapper.Extensions.MySql;
@@ -7,11 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ocelot.JwtAuthorize;
 using Uragano.Consul;
 using Uragano.Core;
 using Uragano.Logging.Exceptionless;
 
-namespace Shop.Identity
+namespace Shop.IdentityService
 {
     class Program
     {
@@ -23,7 +23,8 @@ namespace Shop.Identity
                 {
                     builder.SetBasePath(Directory.GetCurrentDirectory());
                     builder.AddJsonFile($"appsettings.json", true, true);
-                    builder.AddJsonFile($"uragano.{context.HostingEnvironment.EnvironmentName}.json", true, true);
+                    builder.AddJsonFile("uragano.json", true, true);
+                    builder.AddJsonFile($"uragano.{context.HostingEnvironment.EnvironmentName}.json");
                     builder.AddCommandLine(args);
                 })
                 .ConfigureServices((context, service) =>
@@ -34,7 +35,7 @@ namespace Shop.Identity
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });
-
+                    service.AddTokenJwtAuthorize();
                     service.AddScoped<IDapper, MySqlDapper>();
 
                 }).ConfigureLogging((context, builder) =>

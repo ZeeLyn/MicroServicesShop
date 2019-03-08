@@ -22,6 +22,7 @@ namespace Shop.GoodsService
                     {
                         builder.SetBasePath(Directory.GetCurrentDirectory());
                         builder.AddJsonFile($"appsettings.json", true, true);
+                        builder.AddJsonFile("uragano.json", true, true);
                         builder.AddJsonFile($"uragano.{context.HostingEnvironment.EnvironmentName}.json", true, true);
                         builder.AddCommandLine(args);
                     })

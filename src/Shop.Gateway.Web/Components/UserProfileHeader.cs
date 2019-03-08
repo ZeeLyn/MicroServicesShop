@@ -7,6 +7,7 @@ namespace Shop.Gateway.Web.Components
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            await Task.CompletedTask;
             return View();
         }
     }

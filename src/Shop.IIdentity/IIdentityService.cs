@@ -6,10 +6,12 @@ namespace Shop.IIdentity
 {
     [ServiceDiscoveryName("Shop.Identity")]
     [ServiceRoute("identity")]
-    public interface IIdentityService
+    public interface IIdentityService : IService
     {
+        [ServiceRoute("register")]
         Task<(bool Succeed, string ErrorMessage)> Register(RegisterView userInfo);
 
-        Task<AuthResult> Login(LoginView login);
+        [ServiceRoute("login")]
+        Task<(bool Succeed, string ErrorMessage, AuthResult Result)> Login(LoginView login);
     }
 }

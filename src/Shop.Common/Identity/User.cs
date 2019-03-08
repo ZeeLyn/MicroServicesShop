@@ -8,23 +8,21 @@ namespace Shop.Common.Identity
     public class LoginView
     {
         [Required(ErrorMessage = "Please enter your email!")]
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please enter your password!")]
         [MinLength(6, ErrorMessage = "Need at least 6 characters.")]
         [MaxLength(18, ErrorMessage = "Up to 18 characters long.")]
-        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 
     public class RegisterView : LoginView
     {
-        [Required(ErrorMessage = "Please enter your password!")]
+        [Required(ErrorMessage = "Please re-enter your password!")]
         [MinLength(6, ErrorMessage = "Need at least 6 characters.")]
         [MaxLength(18, ErrorMessage = "Up to 18 characters long.")]
         [Compare("Password", ErrorMessage = "Inconsistent password entered twice")]
-        [DataType(DataType.Password)]
         public string ReEnter { get; set; }
         [MaxLength(50)]
         public string NickName { get; set; }
@@ -33,5 +31,11 @@ namespace Shop.Common.Identity
 
     public class User
     {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+        public string NickName { get; set; }
+
+
     }
 }

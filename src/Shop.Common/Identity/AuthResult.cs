@@ -8,6 +8,6 @@ namespace Shop.Common.Identity
     {
         public string Token { get; set; }
 
-        public int Expire { get; set; }
+        public DateTime? Expire { get; set; }
     }
 }

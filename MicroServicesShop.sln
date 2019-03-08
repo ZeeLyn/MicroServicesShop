@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2A717255-9F3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.IGoods", "src\Shop.IGoods\Shop.IGoods.csproj", "{B098B596-1D37-448F-93DA-35AC7445A7CA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "interfaces", "interfaces", "{5801E212-8CB6-4576-9181-3F3F47E34674}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "interfaces", "{5801E212-8CB6-4576-9181-3F3F47E34674}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Common", "src\Shop.Common\Shop.Common.csproj", "{8B4AE1C3-BB8E-4522-A70B-DC9C770460FB}"
 EndProject

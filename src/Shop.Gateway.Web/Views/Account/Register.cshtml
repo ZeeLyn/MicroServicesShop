@@ -7,29 +7,41 @@
     <h1>Sign up</h1>
 </div>
 
-
-<form id="register">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Email</span>
+<template id="register">
+    <form>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Email</span>
+            </div>
+            <input type="email" class="form-control" required placeholder="" maxlength="100" v-model="email">
         </div>
-        <input type="email" class="form-control" required placeholder="" maxlength="100" v-model="email">
-    </div>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Password</span>
+        <label class="text-danger" v-if="errors.Email">{{errors.Email[0]}}</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Password</span>
+            </div>
+            <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="password">
         </div>
-        <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="password">
-    </div>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">ReEnter</span>
+        <label class="text-danger" v-if="errors.Password">{{errors.Password[0]}}</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">ReEnter</span>
+            </div>
+            <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="reEnter">
         </div>
-        <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="reEnter">
-    </div>
-    <button type="button" class="btn btn-primary" v-on:click="SignUp">Sign up</button>
-</form>
-
+        <label class="text-danger" v-if="errors.ReEnter">{{errors.ReEnter[0]}}</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Nickname</span>
+            </div>
+            <input type="text" maxlength="18" required class="form-control" placeholder="" v-model="nickname">
+        </div>
+        <label class="text-danger" v-if="errors.Nickname">{{errors.Nickname[0]}}</label>
+        <div class="input-group">
+            <button type="button" class="btn btn-primary" v-on:click="SignUp">Sign up</button>
+        </div>
+    </form>
+</template>
 @section Styles{
     <style>
         .input-group-text { width: 90px; }
@@ -42,20 +54,28 @@
             data: {
                 email: null,
                 password: null,
-                reEnter: null
+                reEnter: null,
+                nickname: null,
+                errors: {
+                }
             },
-            methods: {
+            methods:
+            {
                 SignUp: function () {
-                    axios.post("/api/account/register", {
-                        email: this.email,
-                        password: this.password
-                    })
+                    var self = this;
+                    axios.post("/api/account/register",
+                        {
+                            email: self.email,
+                            password: self.password,
+                            reEnter: self.reEnter,
+                            nickname: self.nickname
+                        })
                         .then(function (res) {
-                            this.loaded = true;
-                            console.log(this.loaded);
+                            self.errors = {};
+                            window.location.href = '/account/login';
                         })
                         .catch(function (err) {
-
+                            self.errors = err.response.data.errors;
                         })
                         .then(function () {
 

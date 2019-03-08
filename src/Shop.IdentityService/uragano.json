@@ -8,16 +8,33 @@
   },
   "AllowedHosts": "*",
   "Uragano": {
+    "Server": {
+      "ip": "192.168.1.129",
+      "port": 5003,
+      "certUrl": "",
+      "certPwd": "",
+      "weight": 1
+    },
+
     "ServiceDiscovery": {
       "Consul": {
         "Client": {
-          "Address": "http://consul:8500",
+          "Address": "http://localhost:8500",
           "Token": "5ece74af-19d1-0e61-b25c-b9665d29f50b"
+        },
+        "Service": {
+          "Id": null,
+          "Name": "Shop.Identity",
+          "tags": null,
+          "EnableTagOverride": false,
+          "meta": null,
+          "HealthCheckInterval": 10
         }
       }
     },
     "Caching": {
       "Redis": {
+        "Caching": "Uragano.Caching.Redis.RedisPartitionCaching",
         "KeyPrefix": "Uragano",
         "ExpireSeconds": 60,
         "KeyGenerator": null,

@@ -4,5 +4,73 @@
     Layout = "_Layout";
 }
 
+<div class="page-header">
+    <h1>Sign up</h1>
+</div>
 
-<a href="/account/register">Sign up</a>
+<template id="login">
+    <form>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Email</span>
+            </div>
+            <input type="email" class="form-control" required placeholder="" maxlength="100" v-model="email">
+        </div>
+        <label class="text-danger" v-if="errors.Email">{{errors.Email[0]}}</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Password</span>
+            </div>
+            <input type="password" maxlength="18" required class="form-control" placeholder="" v-model="password">
+        </div>
+        <label class="text-danger" v-if="errors.Password">{{errors.Password[0]}}</label>
+
+        <div class="input-group">
+            <button type="button" class="btn btn-primary" v-on:click="SignUp">Sign up</button>
+        </div>
+
+        <div class="input-group">
+            I don't have an account yet,  &nbsp;<a href="/account/register"> sign up</a> &nbsp;now!
+        </div>
+    </form>
+</template>
+@section Styles{
+    <style>
+        .input-group-text { width: 90px; }
+    </style>
+}
+@section Scripts{
+    <script>
+        new Vue({
+            el: "#login",
+            data: {
+                email: null,
+                password: null,
+                reEnter: null,
+                nickname: null,
+                errors: {
+                }
+            },
+            methods:
+            {
+                SignUp: function () {
+                    var self = this;
+                    axios.post("/api/account/login",
+                        {
+                            email: self.email,
+                            password: self.password
+                        })
+                        .then(function (res) {
+                            window.location.href = '/';
+                        })
+                        .catch(function (err) {
+                            self.errors = err.response.data.errors;
+                        })
+                        .then(function () {
+
+                        });
+                }
+            }
+        });
+    </script>
+}

@@ -12,8 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
     <PackageReference Include="Ocelot" Version="13.0.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.312" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.312" />
   </ItemGroup>
 
 
@@ -23,9 +21,6 @@
 
 
   <ItemGroup>
-    <Content Update="uragano.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="uragano.Production.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

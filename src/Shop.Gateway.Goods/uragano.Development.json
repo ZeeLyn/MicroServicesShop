@@ -2,17 +2,16 @@
   "Logging": {
     "LogLevel": {
       "Default": "Trace",
-      "System": "Information",
-      "Microsoft": "Information"
+      "System": "Warning",
+      "Microsoft": "Warning"
     }
   },
-
   "Uragano": {
     "ServiceDiscovery": {
       "Consul": {
         "Client": {
           "Address": "http://192.168.1.254:8500",
-          "Token": ""
+          "Token": "5ece74af-19d1-0e61-b25c-b9665d29f50b"
         }
       }
     }

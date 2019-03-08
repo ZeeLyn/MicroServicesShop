@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Uragano.Consul;
-using Uragano.Core;
 
 namespace Shop.Gateway.Web
 {
@@ -35,14 +33,8 @@ namespace Shop.Gateway.Web
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(option => { option.Filters.Add<ValidateModelStateFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOcelot();
-            services.AddUragano(Configuration, builder =>
-             {
-                 builder.AddClient();
-                 builder.AddConsul();
-                 //builder.AddCircuitBreaker();
-             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

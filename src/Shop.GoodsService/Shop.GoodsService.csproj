@@ -8,10 +8,14 @@
 
   <ItemGroup>
     <None Remove="uragano.Development.json" />
+    <None Remove="uragano.json" />
     <None Remove="uragano.Production.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="uragano.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="uragano.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

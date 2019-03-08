@@ -1,71 +1,20 @@
 {
   "Logging": {
     "LogLevel": {
-      "Default": "Trace",
+      "Default": "Warning",
       "System": "Warning",
       "Microsoft": "Warning"
     }
   },
-  "AllowedHosts": "*",
-  "Uragano": {
-    "Server": {
-      "ip": "{LocalIP}",
-      "port": 5002,
-      "certUrl": "",
-      "certPwd": "",
-      "weight": 1
-    },
 
+  "Uragano": {
     "ServiceDiscovery": {
       "Consul": {
         "Client": {
           "Address": "http://consul:8500",
-          "Token": "5ece74af-19d1-0e61-b25c-b9665d29f50b"
-        },
-        "Service": {
-          "Id": null,
-          "Name": "Shop.Goods",
-          "tags": null,
-          "EnableTagOverride": false,
-          "meta": null,
-          "HealthCheckInterval": 10
+          "Token": ""
         }
       }
-    },
-    "Caching": {
-      "Redis": {
-        "Caching": "Uragano.Caching.Redis.RedisPartitionCaching",
-        "KeyPrefix": "Uragano",
-        "ExpireSeconds": 60,
-        "KeyGenerator": null,
-        "ConnectionStrings": [
-          {
-            "Host": "192.168.1.254",
-            "Port": 6379,
-            "Password": "nihao123",
-            "DefaultDatabase": 13,
-            "PoolSize": 50,
-            "SSL": false,
-            "ConnectionTimeout": -1,
-            "PreHeat": true,
-            "WriteBuffer": 10240,
-            "TryIt": 0,
-            "Name": ""
-          }
-        ]
-      },
-      "Memory": {
-        "ExpireSeconds": 60
-      }
-    },
-    "Logging": {
-      "Exceptionless": {
-        "apiKey": "avtkum3kDogGmLjMCQim9wgC8zHDbcrzQEpDNNJ7"
-      }
-    },
-    "Options": {
-      "ThreadPool_MinThreads": 100,
-      "DotNetty_Event_Loop_Count": 100
     }
   }
 }

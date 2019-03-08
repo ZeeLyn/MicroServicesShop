@@ -33,10 +33,23 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
     
+  shop.identity.service:
+    image: ${DOCKER_REGISTRY-}shopidentityservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: .
+      dockerfile: src/Shop.IdentityService/Dockerfile
+    depends_on:
+      - consul
+    links:
+      - consul
+      - mysql
+    ports:
+      - 5003:5003
 
 
-
-  shop.goodsservice:
+  shop.goods.service:
     image: ${DOCKER_REGISTRY-}shopgoodsservice
     container_name: shop.GoodsService
     restart: always
@@ -53,18 +66,7 @@ services:
       - consul
       - mysql
 
-  shop.identity:
-    image: ${DOCKER_REGISTRY-}shopidentity
-    build:
-      context: .
-      dockerfile: src/Shop.IdentityService/Dockerfile
-    depends_on:
-      - consul
-    links:
-      - consul
-      - mysql
-    ports:
-      - 5003:5003
+
       
   shop.gateway.web:
     image: ${DOCKER_REGISTRY-}shopgatewayweb
@@ -82,6 +84,7 @@ services:
     links:
       - consul
       - shop.gateway.goods
+      - shop.gateway.identity
 
 
   shop.gateway.goods:
@@ -99,3 +102,19 @@ services:
       - consul   
     links:
       - consul
+
+  shop.gateway.identity:
+    image: ${DOCKER_REGISTRY-}shopgatewayidentity
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Identity/Dockerfile
+    ports:
+      - 8003:80
+    depends_on:
+      - consul
+    links:
+      - consul
+
