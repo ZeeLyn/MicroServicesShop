@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Common;
 using Shop.Common.Identity;
@@ -34,11 +36,23 @@ namespace Shop.Gateway.Identity.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginView login)
         {
-            Console.WriteLine(login.Email);
             var (succeed, errorMessage, result) = await IdentityService.Login(login);
             if (succeed)
                 return Ok(result);
             return BadRequest(errorMessage);
+        }
+
+        [Authorize("permission")]
+        [HttpGet("userinfo")]
+        public IActionResult UserInfo()
+        {
+            var nickName = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name)?.Value;
+            if (string.IsNullOrWhiteSpace(nickName))
+                nickName = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            return Ok(new
+            {
+                nickName
+            });
         }
     }
 }

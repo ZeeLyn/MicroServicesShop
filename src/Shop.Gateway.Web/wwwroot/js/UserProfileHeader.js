@@ -2,13 +2,18 @@
     el: "#UserProfileHeader",
     data: {
         list: [{ id: 1, title: "abc" }],
-        loaded: false
+        signin: false
     },
     mounted: function () {
-        axios.get("/api/account/userinfo")
+        var self = this;
+        axios.get("/api/account/userinfo", {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("access_token")
+            }
+        })
             .then(function (res) {
-                this.loaded = true;
-                console.log(this.loaded);
+                self.signin = true;
+                self.nickName = res.data.nickName;
             })
             .catch(function (err) {
 

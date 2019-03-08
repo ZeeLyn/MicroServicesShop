@@ -61,6 +61,7 @@
                             password: self.password
                         })
                         .then(function (res) {
+                            localStorage.setItem("access_token", res.data.token);
                             window.location.href = '/';
                         })
                         .catch(function (err) {

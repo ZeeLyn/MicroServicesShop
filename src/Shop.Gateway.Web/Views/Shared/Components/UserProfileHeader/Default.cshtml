@@ -1,4 +1,5 @@
 ﻿<ul id="UserProfileHeader">
     <li><a href="/basket">Cart<span class="badge badge-info">42</span></a></li>
-    <li><a href="/account/login">Sign in</a></li>
+    <li v-if="!signin"><a href="/account/login">Sign in</a></li>
+    <li v-if="signin"><a href="/account/profile">{{nickName}}</a></li>
 </ul>
