@@ -35,7 +35,6 @@ namespace Shop.Gateway.Web
 
             services.AddMvc(option => { option.Filters.Add<ValidateModelStateFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-
             services.AddOcelot(Configuration);
         }
 
