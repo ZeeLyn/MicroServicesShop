@@ -1,8 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
-using Dapper.Extensions;
-using Dapper.Extensions.MySql;
-using JWT.Extension;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +9,7 @@ using Uragano.Consul;
 using Uragano.Core;
 using Uragano.Logging.Exceptionless;
 
-namespace Shop.IdentityService
+namespace Shop.BasketService
 {
     class Program
     {
@@ -32,12 +30,13 @@ namespace Shop.IdentityService
                     service.AddUragano(context.Configuration, builder =>
                     {
                         builder.AddServer();
+                        builder.AddClient();
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });
-                    service.AddJwtBearerAuthorize();
-                    service.AddScoped<IDapper, MySqlDapper>();
 
+                    var csRedis = new CSRedis.CSRedisClient(context.Configuration.GetValue<string>("RedisConnection"));
+                    RedisHelper.Initialization(csRedis);
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

@@ -7,3 +7,7 @@ services:
   shop.gateway.identity:
 
 
+
+  shop.gateway.basket:
+
+

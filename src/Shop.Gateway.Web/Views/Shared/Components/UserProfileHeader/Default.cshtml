@@ -1,5 +1,14 @@
-﻿<ul id="UserProfileHeader">
-    <li><a href="/basket">Cart<span class="badge badge-info">42</span></a></li>
-    <li v-if="!signin"><a href="/account/login">Sign in</a></li>
-    <li v-if="signin"><a href="/account/profile">{{nickName}}</a></li>
-</ul>
+﻿<template id="UserProfileHeader">
+
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/basket">Cart<span class="badge badge-info" style="margin-left:10px;">{{basketCount}}</span></a>
+    </li>
+    <li class="nav-item" v-if="!signin">
+        <a class="nav-link text-dark" href="/account/login">Sign in</a>
+    </li>
+
+    <li class="nav-item" v-if="signin">
+        <a class="nav-link text-dark" href="/account/profile">{{nickName}}</a>
+    </li>
+
+</template>

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using JWT.Extension;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Common;
 using Shop.Common.Identity;
 using Shop.IIdentity;
 
@@ -42,7 +38,7 @@ namespace Shop.Gateway.Identity.Controllers
             return BadRequest(errorMessage);
         }
 
-        [Authorize("permission")]
+        [Permission]
         [HttpGet("userinfo")]
         public IActionResult UserInfo()
         {

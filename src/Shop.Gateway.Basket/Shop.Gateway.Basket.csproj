@@ -12,17 +12,21 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.312" />
     <PackageReference Include="Uragano.Core" Version="0.0.1-preview.312" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.312" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shop.IIdentity\Shop.IIdentity.csproj" />
+    <ProjectReference Include="..\Shop.IBasket\Shop.IBasket.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="uragano.json">
+    <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="uragano.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="uragano.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="uragano.Production.json">

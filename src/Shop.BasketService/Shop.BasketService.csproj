@@ -17,10 +17,10 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="uragano.json">
+    <Content Include="uragano.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="uragano.Development.json">
+    <Content Include="uragano.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="uragano.Production.json">
@@ -29,21 +29,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper.Extensions.MySql" Version="1.2.1" />
-    <PackageReference Include="JWT.Extension" Version="0.0.1" />
+    <PackageReference Include="CSRedisCore" Version="3.0.45" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
     <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.312" />
     <PackageReference Include="Uragano.Core" Version="0.0.1-preview.312" />
     <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.312" />
-    <PackageReference Include="Utils.Encrypt" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shop.IIdentity\Shop.IIdentity.csproj" />
+    <ProjectReference Include="..\Shop.IBasket\Shop.IBasket.csproj" />
+    <ProjectReference Include="..\Shop.IGoods\Shop.IGoods.csproj" />
   </ItemGroup>
 
 </Project>

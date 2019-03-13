@@ -16,13 +16,17 @@ services:
 
   redis:
     image: redis
+    container_name: redis
     ports:
       - 6380:6379
     command: redis-server --requirepass 123456
+    volumes:
+     - ./redis-data:/data
 
 
   mysql:
     image: mysql:latest
+    container_name: mysql
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -35,6 +39,7 @@ services:
     
   shop.identity.service:
     image: ${DOCKER_REGISTRY-}shopidentityservice
+    container_name: Shop.Igentity.Service
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     build:
@@ -42,6 +47,7 @@ services:
       dockerfile: src/Shop.IdentityService/Dockerfile
     depends_on:
       - consul
+      - mysql
     links:
       - consul
       - mysql
@@ -51,7 +57,7 @@ services:
 
   shop.goods.service:
     image: ${DOCKER_REGISTRY-}shopgoodsservice
-    container_name: shop.GoodsService
+    container_name: Shop.Goods.Service
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -62,15 +68,34 @@ services:
       dockerfile: src/Shop.GoodsService/Dockerfile
     depends_on:
       - consul
+      - mysql
     links:
       - consul
       - mysql
+  
 
+  shop.basket.service:
+    image: ${DOCKER_REGISTRY-}shopbasketservice
+    container_name: Shop.Basket.Service
+    build:
+      context: .
+      dockerfile: src/Shop.BasketService/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - 5004:5004
+    depends_on:
+      - consul
+      - redis
+    links:
+      - consul
+      - redis
 
       
   shop.gateway.web:
     image: ${DOCKER_REGISTRY-}shopgatewayweb
-    container_name: shop.gateway.web
+    container_name: Shop.Gateway.Web
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -81,15 +106,19 @@ services:
       - 9001:80
     depends_on:
       - consul   
+      - shop.gateway.goods
+      - shop.gateway.identity
+      - shop.gateway.basket
     links:
       - consul
       - shop.gateway.goods
       - shop.gateway.identity
+      - shop.gateway.basket
 
 
   shop.gateway.goods:
     image: ${DOCKER_REGISTRY-}shopgatewaygoods
-    container_name: shop.gateway.goods
+    container_name: Shop.Gateway.Goods
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -105,6 +134,7 @@ services:
 
   shop.gateway.identity:
     image: ${DOCKER_REGISTRY-}shopgatewayidentity
+    container_name: Shop.Gateway.Identity
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -113,6 +143,23 @@ services:
       dockerfile: src/Shop.Gateway.Identity/Dockerfile
     ports:
       - 8003:80
+    depends_on:
+      - consul
+    links:
+      - consul
+
+
+  shop.gateway.basket:
+    image: ${DOCKER_REGISTRY-}shopgatewaybasket
+    container_name: Shop.Gateway.Basket
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Basket/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - 8004:80
     depends_on:
       - consul
     links:
