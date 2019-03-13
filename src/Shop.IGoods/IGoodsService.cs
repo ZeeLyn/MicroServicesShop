@@ -14,5 +14,7 @@ namespace Shop.IGoods
         Task<List<GoodsList>> GoodsList(int category);
         [ServiceRoute("info")]
         Task<GoodsList> GoodsInfo(int id);
+        [ServiceRoute("baseInfos")]
+        Task<List<GoodsList>> GoodsInfos(IEnumerable<int> ids);
     }
 }
