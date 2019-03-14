@@ -20,12 +20,12 @@ namespace Shop.GoodsService
             Dapper = dapper;
         }
         /// <summary>
-        /// get all category
+        /// get all categories
         /// </summary>
         /// <returns></returns>
         public async Task<List<GoodsCategoryBase>> List()
         {
-            return await Task.FromResult(await Dapper.QueryAsync<GoodsCategoryBase>("select * from Category"));
+            return await Dapper.QueryAsync<GoodsCategoryBase>("select * from Category");
         }
     }
 }
