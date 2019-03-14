@@ -1,0 +1,19 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "System": "Warning",
+      "Microsoft": "Warning"
+    }
+  },
+  "Uragano": {
+    "ServiceDiscovery": {
+      "Consul": {
+        "Client": {
+          "Address": "http://consul:8500",
+          "Token": "5ece74af-19d1-0e61-b25c-b9665d29f50b"
+        }
+      }
+    }
+  }
+}

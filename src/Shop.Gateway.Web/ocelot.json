@@ -35,6 +35,18 @@
           "Port": 80
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/basket/{everything}",
+      "DownstreamPathTemplate": "/api/basket/{everything}",
+      "UpstreamHttpMethod": [ "get", "post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shop.gateway.basket",
+          "Port": 80
+        }
+      ]
     }
   ],
   "GlobalConfiguration": {

@@ -33,7 +33,7 @@ namespace Shop.Gateway.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc(option => { option.Filters.Add<ValidateModelStateFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddOcelot(Configuration);
         }

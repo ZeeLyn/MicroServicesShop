@@ -8,4 +8,8 @@
     <PackageReference Include="Uragano.Abstractions" Version="0.0.1-preview.312" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Shop.Common\Shop.Common.csproj" />
+  </ItemGroup>
+
 </Project>

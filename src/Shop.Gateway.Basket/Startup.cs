@@ -1,23 +1,20 @@
-﻿using JWT.Extension;
+﻿using System.Linq;
+using JWT.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using Uragano.Consul;
 using Uragano.Core;
 
-namespace Shop.Gateway.Identity
+namespace Shop.Gateway.Basket
 {
     public class Startup
     {
-        private IHostingEnvironment HostingEnvironment { get; }
-
-        public Startup(IConfiguration configuration, IHostingEnvironment evn)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            HostingEnvironment = evn;
         }
 
         public IConfiguration Configuration { get; }
@@ -25,9 +22,7 @@ namespace Shop.Gateway.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = ctx =>
@@ -44,7 +39,6 @@ namespace Shop.Gateway.Identity
                 //builder.AddCircuitBreaker();
             });
             services.AddJwtBearerAuthorize();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
