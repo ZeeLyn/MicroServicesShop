@@ -6,17 +6,17 @@
 <h1>Shopping cart</h1>
 <div id="app">
     <ul class="cart">
-        <li v-for="item in detail">
+        <li v-for="(item,index) in detail">
             <input type="checkbox" :value="item.goodsId" v-on:change="select($event,item)" />
             <img :src="item.pic" class="img-thumbnail" />
             <div>
-                <h3>{{item.title}}</h3>
+                <h3>{{item.title}}{{item.goodsId}}</h3>
                 <label>Quantity: {{item.count}}</label>
             </div>
             <span>
                 $ {{item.totalPrice}}
             </span>
-            <a href="javascript:;" v-on:click="del(item)">Delete</a>
+            <a href="javascript:;" v-on:click="del(index,item)">Delete</a>
         </li>
     </ul>
     <div class="info">
@@ -51,7 +51,7 @@
                                 price: item.price,
                                 title: item.title,
                                 checked: false,
-                                totalPrice: item.price * item.count,
+                                totalPrice: self.accMul(item.price, item.count),
                                 count: item.count
                             });
                         });
@@ -72,7 +72,6 @@
                     var total = 0;
                     $(this.detail).each(function (index, item) {
                         if (item.checked) {
-                            console.log(item);
                             items += item.count;
                             total += item.totalPrice;
                         }
@@ -80,7 +79,13 @@
                     self.items = items;
                     self.total = total;
                 },
-                del: function (item) {
+                accMul: function (arg1, arg2) {
+                    var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+                    try { m += s1.split(".")[1].length } catch (e) { }
+                    try { m += s2.split(".")[1].length } catch (e) { }
+                    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+                },
+                del: function (index, item) {
                     if (confirm("Are you sure delete it?")) {
                         var self = this;
                         axios.delete("http://localhost:9001/api/basket/remove/" + item.goodsId,
@@ -89,7 +94,11 @@
                                     Authorization: "Bearer " + localStorage.getItem("access_token")
                                 }
                             }).then(function (res) {
-                                self.detail.splice(item, 1);
+                                item.checked = false;
+                                self.detail.splice(index, 1);
+                                self.calculate();
+                                basket.LoadBasket();
+                                console.log(self.detail);
                             }).catch(function (err) {
 
                             }).then(function () {
