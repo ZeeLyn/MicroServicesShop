@@ -11,21 +11,21 @@ namespace Shop.GoodsService
     /// <summary>
     /// goods category service implementation
     /// </summary>
-    public class GoodsCategoryService : IGoodsCategoryService
+    public class GoodsCategroryService:IGoodsCategoryService
     {
         private IDapper Dapper { get; }
 
-        public GoodsCategoryService(IDapper dapper)
+        public GoodsCategroryService(IDapper dapper)
         {
             Dapper = dapper;
         }
         /// <summary>
-        /// get all category
+        /// get all categories
         /// </summary>
         /// <returns></returns>
         public async Task<List<GoodsCategoryBase>> List()
         {
-            return await Dapper.QueryAsync<GoodsCategoryBase>("select * from Category;");
+            return await Dapper.QueryAsync<GoodsCategoryBase>("select * from Category");
         }
     }
 }
