@@ -7,7 +7,7 @@
 <div id="app">
     <ul class="cart">
         <li v-for="(item,index) in detail">
-            <input type="checkbox" :value="item.goodsId" v-on:change="select($event,item)" />
+            <input type="checkbox" v-on:change="select($event,item)" />
             <img :src="item.pic" class="img-thumbnail" />
             <div>
                 <h3>{{item.title}}{{item.goodsId}}</h3>
@@ -94,7 +94,6 @@
                                     Authorization: "Bearer " + localStorage.getItem("access_token")
                                 }
                             }).then(function (res) {
-                                item.checked = false;
                                 self.detail.splice(index, 1);
                                 self.calculate();
                                 basket.LoadBasket();
