@@ -16,6 +16,7 @@
             <span>
                 $ {{item.totalPrice}}
             </span>
+            <a href="javascript:;" v-on:click="del(item)">Delete</a>
         </li>
     </ul>
     <div class="info">
@@ -62,7 +63,6 @@
             },
             methods: {
                 select: function (e, item) {
-                    //console.log(item);
                     item.checked = e.target.checked;
                     this.calculate();
                 },
@@ -79,6 +79,24 @@
                     });
                     self.items = items;
                     self.total = total;
+                },
+                del: function (item) {
+                    if (confirm("Are you sure delete it?")) {
+                        var self = this;
+                        axios.delete("http://localhost:9001/api/basket/remove/" + item.goodsId,
+                            {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("access_token")
+                                }
+                            }).then(function (res) {
+                                self.detail.splice(item, 1);
+                            }).catch(function (err) {
+
+                            }).then(function () {
+
+                            });
+                    }
+
                 }
             }
         });
@@ -93,6 +111,7 @@
         .cart li img { width: 100px; height: 100px; margin: 0 10px; }
         .cart li div { flex: 1; display: flex; flex-direction: column; }
         .cart li h3 { font-size: 15px; }
+        .cart li a { color: #ff0000; margin-left: 30px; }
         .info { text-align: right; font-size: 18px; font-weight: bold; }
         .checkout { text-align: right; margin-top: 30px; }
     </style>

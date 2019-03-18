@@ -44,5 +44,14 @@ namespace Shop.Gateway.Basket.Controllers
                 return Unauthorized();
             return Ok(await BasketService.Get(userid));
         }
+
+        [HttpDelete("remove/{id:int}")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
+                return Unauthorized();
+            await BasketService.Remove(userid, id);
+            return Ok();
+        }
     }
 }
