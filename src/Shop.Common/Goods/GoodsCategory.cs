@@ -7,6 +7,6 @@ namespace Shop.Common
     public class GoodsCategoryBase
     {
         public int Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
     }
 }

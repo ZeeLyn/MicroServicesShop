@@ -13,12 +13,10 @@ namespace Shop.GoodsService
     public class GoodsService : IGoodsService
     {
         private IDapper Dapper { get; }
-
         public GoodsService(IDapper dapper)
         {
             Dapper = dapper;
         }
-
         /// <summary>
         /// get all goods by category
         /// </summary>
@@ -26,8 +24,8 @@ namespace Shop.GoodsService
         /// <returns></returns>
         public async Task<List<GoodsList>> GoodsList(int category)
         {
-            return await Dapper.QueryAsync<GoodsList>("select * from Goods where CategoryId=@categoryId",
-                new {categoryId = category});
+            return await Dapper.QueryAsync<GoodsList>($"select * from Goods {(category > 0 ? "where CategoryId=@categoryId" : "")}",
+                    new { categoryId = category });
         }
 
         /// <summary>
@@ -38,18 +36,18 @@ namespace Shop.GoodsService
         public async Task<GoodsList> GoodsInfo(int id)
         {
             return await Dapper.QueryFirstOrDefaultAsync<GoodsList>("select * from Goods where id=@id",
-                new {id});
+                    new { id });
         }
 
         /// <summary>
         /// get goods by id list
         /// </summary>
-        /// <param name="ids">goods id list</param>
+        /// <param name="ids"></param>
         /// <returns></returns>
         public async Task<List<GoodsList>> GoodsInfos(IEnumerable<int> ids)
         {
             return await Dapper.QueryAsync<GoodsList>("select * from Goods where id in @ids",
-                new {ids});
+                new { ids });
         }
     }
 }

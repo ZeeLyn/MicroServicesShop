@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Shop.Common.Basket;
+using Shop.IBasket;
 using Shop.IGoods;
 
 namespace Shop.BasketService
 {
-    public class BasketService : IBasket.IBasketService
+    public class BasketService : IBasketService
     {
         private IGoodsService GoodsService { get; }
 
@@ -29,17 +28,21 @@ namespace Shop.BasketService
 
         public async Task<List<Basket>> Get(int userid)
         {
-            var list = await RedisHelper.HGetAllAsync<int>(userid.ToString());
+            var list = (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Select(p => new { Id = int.Parse(p.Key), Count = p.Value }).ToList();
+            var goods = await GoodsService.GoodsInfos(list.Select(p => p.Id).ToList());
             return list.Select(p => new Basket
             {
-                GoodsId = int.Parse(p.Key),
-                Count = p.Value
+                GoodsId = p.Id,
+                Count = p.Count,
+                Price = goods.FirstOrDefault(i => i.Id == p.Id)?.Price ?? 0,
+                Title = goods.FirstOrDefault(i => i.Id == p.Id)?.Title,
+                Pic = goods.FirstOrDefault(i => i.Id == p.Id)?.Pic
             }).ToList();
         }
 
         public async Task<int> Count(int userid)
         {
-            return (int)await RedisHelper.HLenAsync(userid.ToString());
+            return (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Sum(p => p.Value);
         }
     }
 }

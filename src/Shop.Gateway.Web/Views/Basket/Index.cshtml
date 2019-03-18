@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Shopping cart</h1>
+<div id="app">
+    <ul class="cart">
+        <li v-for="item in detail">
+            <input type="checkbox" :value="item.goodsId" v-on:change="select($event,item)" />
+            <img :src="item.pic" class="img-thumbnail" />
+            <div>
+                <h3>{{item.title}}</h3>
+                <label>Quantity: {{item.count}}</label>
+            </div>
+            <span>
+                $ {{item.totalPrice}}
+            </span>
+        </li>
+    </ul>
+    <div class="info">
+        Subtotal({{items}} items):$ {{total}}
+    </div>
+    <div class="checkout">
+        <input type="button" value="Proceed to checkout" class="btn btn-primary" v-bind:disabled="items<=0" />
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                detail: [],
+                items: 0,
+                total: 0
+            },
+            mounted: function () {
+                var self = this;
+                axios.get("http://localhost:9001/api/basket/detail",
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("access_token")
+                        }
+                    }).then(function (res) {
+                        $(res.data).each(function (index, item) {
+
+                            self.detail.push({
+                                goodsId: item.goodsId,
+                                pic: item.pic,
+                                price: item.price,
+                                title: item.title,
+                                checked: false,
+                                totalPrice: item.price * item.count,
+                                count: item.count
+                            });
+                        });
+                    }).catch(function (err) {
+
+                    }).then(function () {
+
+                    });
+            },
+            methods: {
+                select: function (e, item) {
+                    //console.log(item);
+                    item.checked = e.target.checked;
+                    this.calculate();
+                },
+                calculate: function () {
+                    var self = this;
+                    var items = 0;
+                    var total = 0;
+                    $(this.detail).each(function (index, item) {
+                        if (item.checked) {
+                            console.log(item);
+                            items += item.count;
+                            total += item.totalPrice;
+                        }
+                    });
+                    self.items = items;
+                    self.total = total;
+                }
+            }
+        });
+
+    </script>
+}
+
+@section Styles{
+    <style>
+        .cart { display: flex; flex-direction: column; }
+        .cart li { display: flex; align-items: center; margin: 10px 0; }
+        .cart li img { width: 100px; height: 100px; margin: 0 10px; }
+        .cart li div { flex: 1; display: flex; flex-direction: column; }
+        .cart li h3 { font-size: 15px; }
+        .info { text-align: right; font-size: 18px; font-weight: bold; }
+        .checkout { text-align: right; margin-top: 30px; }
+    </style>
+}
