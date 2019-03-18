@@ -12,7 +12,7 @@ namespace Shop.Common.Basket
 
         public decimal Price { get; set; }
 
-
+        public string Pic { get; set; }
     }
 
     public class BasketBase

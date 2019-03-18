@@ -24,8 +24,8 @@ namespace Shop.GoodsService
         /// <returns></returns>
         public async Task<List<GoodsList>> GoodsList(int category)
         {
-            return await Dapper.QueryAsync<GoodsList>("select * from Goods where CategoryId=@categoryId",
-                    new {categoryId = category});
+            return await Dapper.QueryAsync<GoodsList>($"select * from Goods {(category > 0 ? "where CategoryId=@categoryId" : "")}",
+                    new { categoryId = category });
         }
 
         /// <summary>
@@ -42,12 +42,12 @@ namespace Shop.GoodsService
         /// <summary>
         /// get goods by id list
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
         public async Task<List<GoodsList>> GoodsInfos(IEnumerable<int> ids)
         {
             return await Dapper.QueryAsync<GoodsList>("select * from Goods where id in @ids",
-                new {ids});
+                new { ids });
         }
     }
 }

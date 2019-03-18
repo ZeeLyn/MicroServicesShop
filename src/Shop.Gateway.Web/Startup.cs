@@ -51,6 +51,10 @@ namespace Shop.Gateway.Web
                 //app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCors(b =>
+            {
+                b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
+            });
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

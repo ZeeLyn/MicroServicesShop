@@ -36,5 +36,13 @@ namespace Shop.Gateway.Basket.Controllers
                 return Unauthorized();
             return Ok(await BasketService.Count(userid));
         }
+
+        [HttpGet("detail")]
+        public async Task<IActionResult> List()
+        {
+            if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
+                return Unauthorized();
+            return Ok(await BasketService.Get(userid));
+        }
     }
 }

@@ -3,14 +3,36 @@
 }
 <template id="app">
     <div>
-        <ul>
-            <li v-for="item in list">
-                {{item.title}}
+        <select class="form-control category">
+            <option value="0">Categories</option>
+            <option v-for="item in category" :value="item.id">{{item.name}}</option>
+        </select>
+        <ul class="goods_list">
+            <li class="item img-thumbnail" v-for="item in goods">
+                <a href="">
+                    <img :src="item.pic" class="img-fluid" />
+                    <h5>{{item.title}}</h5>
+                </a>
+                <div>
+                    <b>${{item.price}}</b>
+                    <input type="image" src="~/image/basket.png" alt="Add to cart" :value="item.id" />
+                </div>
             </li>
         </ul>
     </div>
 </template>
 
+@section Styles{
+    <style>
+        .goods_list { width: 100%; display: flex; flex-wrap: wrap; align-items: center; }
+        .item { display: flex; margin: 20px 30px 0 0; flex-direction: column; }
+        .item img { width: 200px; height: 200px; }
+        .item div { display: flex; justify-content: space-between; align-items: center; }
+        .item div b { color: #ff6a00; }
+        .item div input { width: 25px; height: 25px; }
+    </style>
+
+}
 @section Scripts
     {
     <script>
@@ -18,24 +40,72 @@
             el: "#app",
             data: {
                 list: [{ id: 1, title: "abc" }],
-                loaded: false
+                category: [],
+                currentCategory: 0,
+                goods: []
             },
             mounted: function () {
-                //axios.get("/api/account/register")
-                //    .then(function (res) {
-                //        this.loaded = true;
-                //        console.log(this.loaded);
-                //    })
-                //    .catch(function (err) {
+                var self = this;
+                axios.get("http://localhost:9001/api/category/lst")
+                    .then(function (res) {
+                        self.category = res.data;
+                        self.loadGoods();
+                    })
+                    .catch(function (err) {
 
-                //    })
-                //    .then(function () {
+                    })
+                    .then(function () {
 
-                //    });
+                    });
             },
             methods: {
+                loadGoods: function () {
+                    var self = this;
+                    axios.get("http://localhost:9001/api/goods/lst/" + self.currentCategory)
+                        .then(function (res) {
+                            self.goods = res.data;
+                        })
+                        .catch(function (err) {
 
+                        })
+                        .then(function () {
+
+                        });
+                }
             }
         });
+        $(function () {
+            $(".category").change(function (e) {
+
+                app.currentCategory = $(this).val();
+                app.loadGoods();
+            });
+            $(".goods_list").on("click",
+                ".item input",
+                function (e) {
+                    var val = $(this).val();
+                    axios.post("http://localhost:9001/api/basket/add",
+                        {
+                            goodsId: val,
+                            count: 1
+                        },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("access_token")
+                            }
+
+                        }).then(function (res) {
+                            basket.LoadBasket();
+                            alert("Ok");
+                        }).catch(function (err) {
+                            if (err.response.status == 401) {
+                                window.location.href = "/account/login";
+                            }
+                        }).then(function () {
+
+                        });
+                });
+        });
+
     </script>
 }
