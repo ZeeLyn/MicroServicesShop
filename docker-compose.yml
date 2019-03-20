@@ -17,11 +17,22 @@ services:
   redis:
     image: redis
     container_name: redis
+    restart: always
     ports:
       - 6380:6379
     command: redis-server --requirepass 123456
     volumes:
      - ./redis-data:/data
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: Rabbitmq
+    restart: always
+    ports:
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=123456
 
 
   mysql:
@@ -40,6 +51,7 @@ services:
   shop.identity.service:
     image: ${DOCKER_REGISTRY-}shopidentityservice
     container_name: Shop.Igentity.Service
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     build:
