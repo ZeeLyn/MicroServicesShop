@@ -16,9 +16,11 @@ namespace Shop.GoodsService
         {
             Dapper = dapper;
         }
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await Dapper.ExecuteAsync(@"SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `Category`;CREATE TABLE `Category` (
+            await Dapper.ExecuteAsync(
+                @"SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `Category`;CREATE TABLE `Category` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) DEFAULT NULL,
   PRIMARY KEY(`Id`)
@@ -38,6 +40,25 @@ namespace Shop.GoodsService
   `Stock` int(11) DEFAULT '0',
   PRIMARY KEY(`Id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+DROP TABLE IF EXISTS `Order`;CREATE TABLE `Order` (
+  `OrderCode` varchar(255) DEFAULT NULL,
+  `UserId` varchar(50) DEFAULT NULL,
+  `PayCode` varchar(50) DEFAULT NULL,
+  `Amount` decimal(10,0) DEFAULT NULL,
+  `PayStatus` tinyint(4) DEFAULT NULL,
+  `OrderStatus` tinyint(4) DEFAULT NULL,
+  `CreatedOn` datetime DEFAULT NULL,
+  `CompletedTime` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `OrderDetail`;
+CREATE TABLE `OrderDetail` (
+  `OrderCode` varchar(255) DEFAULT NULL,
+  `GoodsId` int(11) DEFAULT NULL,
+  `Count` int(11) DEFAULT NULL,
+  `Price` decimal(10,2) DEFAULT NULL,
+  `Amount` decimal(10,2) DEFAULT NULL,
+  `CreatedOn` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
             INSERT INTO `Goods` VALUES('1', 'Three Days to See', '/image/1854764794af65d7.jpg', '17.80', '1', 'All of us have read thrilling stories in which the hero had only a limited and specified time to live. Sometimes it was as long as a year; sometimes as short as twenty-four hours. But always we were interested in discovering just how the doomed man chose to spend his last days or his last hours. I speak, of course, of free men who have a choice, not condemned criminals whose sphere of activities is strictly delimited.', '2019-03-06 16:53:27', '20');
             INSERT INTO `Goods` VALUES('2', 'Pride And Prejudice', '/image/85a0d3fce746433d.jpg', '34.80', '1', 'IT is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife. \r\nHowever little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.', '2019-03-06 16:55:17', '30');
