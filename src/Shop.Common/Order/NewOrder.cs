@@ -4,37 +4,36 @@ using System.Text;
 
 namespace Shop.Common.Order
 {
+    /// <summary>
+    /// new order
+    /// </summary>
     public class NewOrder
     {
-        /// <summary>
-        /// order uid
-        /// </summary>
-        public string OrderCode { get; set; }
 
         /// <summary>
         /// user id
         /// </summary>
         public int UserId { get; set; }
 
-        /// <summary>
-        /// pay uid
-        /// </summary>
-        public string PayCode { get; set; }
+        ///// <summary>
+        ///// pay uid
+        ///// </summary>
+        //public string PayCode { get; set; }
 
-        /// <summary>
-        /// order lump-sum price
-        /// </summary>
-        public decimal Amount { get; set; }
+        ///// <summary>
+        ///// order lump-sum price
+        ///// </summary>
+        //public decimal Amount { get; set; }
 
-        /// <summary>
-        /// pay status
-        /// </summary>
-        public int PayStatus { get; set; }
+        ///// <summary>
+        ///// pay status
+        ///// </summary>
+        //public PayStatus PayStatus { get; set; }
 
         /// <summary>
         /// order status
         /// </summary>
-        public int OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
         /// <summary>
         /// order submitted time
@@ -45,8 +44,43 @@ namespace Shop.Common.Order
         /// order completed time
         /// </summary>
         public DateTime CompletedTime { get; set; }
+        /// <summary>
+        /// goods info list
+        /// </summary>
+        public List<GoodsInfo> GoodsInfos { get; set; }
+    }
+    
+    public class NewOrderResult
+    {
+        /// <summary>
+        /// order uid
+        /// </summary>
+        public string OrderCode { get; set; }
+        /// <summary>
+        /// order submitted time
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
     }
 
+    public class NewOrderBase
+    {
+        /// <summary>
+        /// order uid
+        /// </summary>
+        public string OrderCode { get; set; }
+        /// <summary>
+        /// order status
+        /// </summary>
+        public OrderStatus OrderStatus { get; set; }
+        /// <summary>
+        /// pay status
+        /// </summary>
+        public PayStatus PayStatus { get; set; }
+    }
+
+    /// <summary>
+    /// new order detail
+    /// </summary>
     public class NewOrderDetail
     {
         /// <summary>
@@ -73,5 +107,43 @@ namespace Shop.Common.Order
         /// goods lump-sum price
         /// </summary>
         public decimal Amount { get; set; }
+    }
+
+    public class GoodsInfo
+    {
+        /// <summary>
+        /// goods uid
+        /// </summary>
+        public int GoodsId { get; set; }
+        /// <summary>
+        /// goods count
+        /// </summary>
+        public int Count { get; set; }
+
+        /// <summary>
+        /// goods unit-price
+        /// </summary>
+        public decimal Price { get; set; }
+    }
+
+    /// <summary>
+    /// order status enum
+    /// </summary>
+    public enum OrderStatus
+    {
+        Delete = -1,
+        Cancel,
+        Submmit,
+        Complete
+    }
+
+    /// <summary>
+    /// pay status enum
+    /// </summary>
+    public enum PayStatus
+    {
+        Refund = -1,
+        UnComplete,
+        Complete
     }
 }
