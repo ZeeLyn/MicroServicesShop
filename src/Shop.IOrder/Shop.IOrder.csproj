@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shop.Common\Shop.Common.csproj" />
+    <PackageReference Include="Uragano.Abstractions" Version="0.0.1-preview.312" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Uragano.Abstractions">
-      <HintPath>C:\Users\adminstrator\.nuget\packages\uragano.abstractions\0.0.1-preview.312\lib\netstandard2.0\Uragano.Abstractions.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Shop.Common\Shop.Common.csproj" />
   </ItemGroup>
 
 </Project>
