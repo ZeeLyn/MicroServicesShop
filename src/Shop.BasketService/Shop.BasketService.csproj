@@ -36,6 +36,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.312" />
     <PackageReference Include="Uragano.Core" Version="0.0.1-preview.312" />
     <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.312" />

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using Uragano.Consul;
 using Uragano.Core;
 using Uragano.Logging.Exceptionless;
@@ -34,15 +35,27 @@ namespace Shop.BasketService
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });
+                    var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
+                    var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
+                    var rabbitPassword = context.Configuration.GetValue<string>("RabbitMQ:Password");
                     service.AddCap(builder =>
                     {
                         builder.UseMySql(context.Configuration.GetConnectionString("DefaultConnection"));
                         builder.UseRabbitMQ(r =>
                         {
-                            r.HostName = "rabbitmq";
-                            r.Password = "123456";
+                            r.HostName = rabbitHost;
+                            r.UserName = rabbitUser;
+                            r.Password = rabbitPassword;
+                            //r.ExchangeName = "exchange.basket.checkout";
                         });
                     });
+                    service.AddSingleton<IConnectionFactory>(s => new ConnectionFactory
+                    {
+                        HostName = rabbitHost,
+                        UserName = rabbitUser,
+                        Password = rabbitPassword
+                    });
+                    service.AddHostedService<InitRabbitMQService>();
                     var csRedis = new CSRedis.CSRedisClient(context.Configuration.GetValue<string>("RedisConnection"));
                     RedisHelper.Initialization(csRedis);
                 }).ConfigureLogging((context, builder) =>

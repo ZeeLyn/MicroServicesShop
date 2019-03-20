@@ -2,7 +2,8 @@
     Layout = "_Layout";
 }
 
-<div class="container">  <!-- 开加一个container的目的是为了让整体布局居中 -->
+<div class="container">
+    <!-- 开加一个container的目的是为了让整体布局居中 -->
     <div class="tab-head" id="category">
         <ul class="list-group">
             <li class="list-group-item" v-for="item in categorys">{{item.name}}</li>
@@ -12,7 +13,7 @@
         <div class="show">
             <ul>
                 <li v-for="item in items">
-                    <img src="item.pic"/>
+                    <img src="item.pic" />
                     <p>{{item.Title}}</p>
                     <p class="price"><span class="mon-color">{{item.price}}</span></p>
                     <p><span class="fr cart">add to cart</span></p>
@@ -26,23 +27,10 @@
 
 @section Styles{
     <style>
-        .choose {
-            background-color: #E3E3E3;
-        }
-        .tab-content {
-            position: absolute;
-            top: 0;
-            left: 26%;
-            width: 74%;
-        }
-        .tab-content div{
-            display: none;
-        }
-        .tab-content ul li img{
-            width: 9rem;
-            height: 9rem;
-            float: left;
-        }
+        .choose { background-color: #E3E3E3; }
+        .tab-content { position: absolute; top: 0; left: 26%; width: 74%; }
+        .tab-content div { display: none; }
+        .tab-content ul li img { width: 9rem; height: 9rem; float: left; }
     </style>
 }
 @section Scripts{
@@ -56,7 +44,7 @@
             },
             methods: {
                 SignUp: function () {
-                    axios.get("/api/goods/lst/"+)
+                    axios.get("/api/goods/lst/")
                         .then(function (res) {
                             this.loaded = true;
                             console.log(this.loaded);

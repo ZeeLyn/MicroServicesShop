@@ -23,7 +23,7 @@
         Subtotal({{items}} items):$ {{total}}
     </div>
     <div class="checkout">
-        <input type="button" value="Proceed to checkout" class="btn btn-primary" v-bind:disabled="items<=0" />
+        <input type="button" v-on:click="checkout()" value="Proceed to checkout" class="btn btn-primary" v-bind:disabled="items<=0" />
     </div>
 </div>
 @section Scripts{
@@ -105,6 +105,31 @@
                             });
                     }
 
+                },
+                checkout: function () {
+                    var checkouts = [];
+                    $(this.detail).each(function (index, item) {
+                        if (item.checked) {
+                            checkouts.push(item.goodsId);
+                        }
+                    });
+                    axios.post("http://localhost:9001/api/basket/checkout",
+                        checkouts,
+                        {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("access_token")
+                            }
+
+                        }).then(function (res) {
+
+                            alert("Ok");
+                        }).catch(function (err) {
+                            if (err.response.status == 401) {
+                                window.location.href = "/account/login";
+                            }
+                        }).then(function () {
+
+                        });
                 }
             }
         });

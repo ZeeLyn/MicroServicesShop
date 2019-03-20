@@ -53,12 +53,18 @@ namespace Shop.BasketService
         {
             var basket = (await Get(userid)).FindAll(p => goodsId.Contains(p.GoodsId));
 
-            await CapBus.PublishAsync("", new CheckOut
+            await CapBus.PublishAsync("route.basket.checkout", new CheckOut
             {
                 UserId = userid,
                 Basket = basket
             });
             return true;
         }
+
+        //[CapSubscribe("route.basket.checkout")]
+        //public void CapSubscribe(CheckOut checkOut)
+        //{
+
+        //}
     }
 }
