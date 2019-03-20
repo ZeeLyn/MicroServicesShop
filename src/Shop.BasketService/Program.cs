@@ -34,7 +34,15 @@ namespace Shop.BasketService
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });
-
+                    service.AddCap(builder =>
+                    {
+                        builder.UseMySql(context.Configuration.GetConnectionString("DefaultConnection"));
+                        builder.UseRabbitMQ(r =>
+                        {
+                            r.HostName = "rabbitmq";
+                            r.Password = "123456";
+                        });
+                    });
                     var csRedis = new CSRedis.CSRedisClient(context.Configuration.GetValue<string>("RedisConnection"));
                     RedisHelper.Initialization(csRedis);
                 }).ConfigureLogging((context, builder) =>

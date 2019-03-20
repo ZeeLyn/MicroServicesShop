@@ -6,8 +6,6 @@ namespace Shop.Common.Basket
 {
     public class Basket : BasketBase
     {
-
-
         public string Title { get; set; }
 
         public decimal Price { get; set; }

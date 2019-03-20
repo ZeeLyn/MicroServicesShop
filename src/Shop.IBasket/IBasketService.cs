@@ -17,6 +17,9 @@ namespace Shop.IBasket
 
         Task<List<Basket>> Get(int userid);
 
+
         Task<int> Count(int userid);
+
+        Task<bool> CheckOut(int userid, List<int> goodsId);
     }
 }

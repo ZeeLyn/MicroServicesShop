@@ -100,9 +100,14 @@ services:
     depends_on:
       - consul
       - redis
+      - rabbitmq
+      - mysql
     links:
       - consul
       - redis
+      - rabbitmq
+      - mysql
+      
 
       
   shop.gateway.web:

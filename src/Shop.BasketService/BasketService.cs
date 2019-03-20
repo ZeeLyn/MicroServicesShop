@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Shop.Common.Basket;
 using Shop.IBasket;
 using Shop.IGoods;
@@ -11,9 +12,12 @@ namespace Shop.BasketService
     {
         private IGoodsService GoodsService { get; }
 
-        public BasketService(IGoodsService goodsService)
+        private readonly ICapPublisher CapBus;
+
+        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher)
         {
             GoodsService = goodsService;
+            CapBus = capPublisher;
         }
 
         public async Task Add(int userid, int goodsId, int count)
@@ -43,6 +47,18 @@ namespace Shop.BasketService
         public async Task<int> Count(int userid)
         {
             return (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Sum(p => p.Value);
+        }
+
+        public async Task<bool> CheckOut(int userid, List<int> goodsId)
+        {
+            var basket = (await Get(userid)).FindAll(p => goodsId.Contains(p.GoodsId));
+
+            await CapBus.PublishAsync("", new CheckOut
+            {
+                UserId = userid,
+                Basket = basket
+            });
+            return true;
         }
     }
 }

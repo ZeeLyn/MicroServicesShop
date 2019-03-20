@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using JWT.Extension;
@@ -51,6 +52,15 @@ namespace Shop.Gateway.Basket.Controllers
             if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
                 return Unauthorized();
             await BasketService.Remove(userid, id);
+            return Ok();
+        }
+
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout([FromBody]List<int> goods)
+        {
+            if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
+                return Unauthorized();
+            await BasketService.CheckOut(userid, goods);
             return Ok();
         }
     }

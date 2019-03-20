@@ -7,7 +7,7 @@
 <div id="app">
     <ul class="cart">
         <li v-for="(item,index) in detail">
-            <input type="checkbox" v-on:change="select($event,item)" />
+            <input type="checkbox" v-on:change="select($event,item)" value="item.goodsId" />
             <img :src="item.pic" class="img-thumbnail" />
             <div>
                 <h3>{{item.title}}{{item.goodsId}}</h3>
