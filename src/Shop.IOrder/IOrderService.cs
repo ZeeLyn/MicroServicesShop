@@ -7,7 +7,7 @@ namespace Shop.IOrder
 {
     [ServiceDiscoveryName("Shop.Order")]
     [ServiceRoute("order")]
-    public interface IOrderService
+    public interface IOrderService:IService
     {
         /// <summary>
         /// submmit order
