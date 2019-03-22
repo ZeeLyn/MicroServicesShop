@@ -61,8 +61,13 @@ namespace Shop.BasketService
             {
                 UserId = userid,
                 Basket = basket
-            });
+            }, "CheckOutCallback");
             return true;
+        }
+
+        public async Task CheckOutCallback(List<int> goodsId)
+        {
+
         }
 
         //[CapSubscribe("route.basket.checkout")]
