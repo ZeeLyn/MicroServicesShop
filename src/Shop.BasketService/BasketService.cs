@@ -51,7 +51,11 @@ namespace Shop.BasketService
 
         public async Task<bool> CheckOut(int userid, List<int> goodsId)
         {
-            var basket = (await Get(userid)).FindAll(p => goodsId.Contains(p.GoodsId));
+            var basket = (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Select(p => new BasketBase
+            {
+                GoodsId = int.Parse(p.Key),
+                Count = p.Value
+            }).Where(p => goodsId.Any(i => i == p.GoodsId)).ToList();
 
             await CapBus.PublishAsync("route.basket.checkout", new CheckOut
             {

@@ -8,6 +8,7 @@ namespace Shop.Common.Basket
     {
         public int UserId { get; set; }
 
-        public List<Basket> Basket { get; set; }
+        public List<BasketBase> Basket { get; set; }
     }
+
 }
