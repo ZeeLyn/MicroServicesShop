@@ -35,7 +35,28 @@ namespace Shop.OrderService
                         builder.AddConsul();
                     });
                     service.AddScoped<IDapper, MySqlDapper>();
-
+                    //SeedData.Initialize(service);
+                    //service.AddHostedService<InitDataService>();
+                    var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
+                    var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
+                    var rabbitPassword = context.Configuration.GetValue<string>("RabbitMQ:Password");
+                    var capConn = context.Configuration.GetConnectionString("DefaultConnection");
+                    //注意: 注入的服务需要在 `services.AddCap()` 之前
+                    service.AddTransient<ISubscriberService, OrderSubscriberService>();
+                    service.AddCap(builder =>
+                    {
+                        builder.UseMySql(opt =>
+                        {
+                            opt.ConnectionString = capConn;
+                        });
+                        builder.UseRabbitMQ(r =>
+                        {
+                            r.HostName = rabbitHost;
+                            r.UserName = rabbitUser;
+                            r.Password = rabbitPassword;
+                        });
+                    });
+                    
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

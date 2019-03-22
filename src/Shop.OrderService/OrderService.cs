@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Extensions;
+using DotNetCore.CAP;
+using Shop.Common.Basket;
 using Shop.Common.Order;
 using Shop.IOrder;
 
@@ -75,22 +77,22 @@ namespace Shop.OrderService
                 return false;
             }
 
-            if (order.OrderStatus == OrderStatus.Delete)//deleted order cann't be handle
+            if (order.OrderStatus == OrderStatus.Delete) //deleted order cann't be handle
             {
                 //log
                 return false;
             }
 
-            if (order.OrderStatus == OrderStatus.Cancel)//cancelled order can only be delete
+            if (order.OrderStatus == OrderStatus.Cancel) //cancelled order can only be delete
             {
                 if (status != OrderStatus.Delete)
-                { 
+                {
                     //log
                     return false;
                 }
             }
 
-            if (order.OrderStatus == OrderStatus.Submmit)//submmitted order can only be cancelled
+            if (order.OrderStatus == OrderStatus.Submmit) //submmitted order can only be cancelled
             {
                 if (status != OrderStatus.Cancel)
                 {
@@ -99,7 +101,7 @@ namespace Shop.OrderService
                 }
             }
 
-            if (order.OrderStatus == OrderStatus.Complete)//completed order can only be delete
+            if (order.OrderStatus == OrderStatus.Complete) //completed order can only be delete
             {
                 if (status != OrderStatus.Delete)
                 {
@@ -122,7 +124,8 @@ namespace Shop.OrderService
                 Dapper.RollbackTransaction();
                 return false;
             }
-           
+
         }
+
     }
 }
