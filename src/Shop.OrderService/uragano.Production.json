@@ -9,7 +9,7 @@
   "Uragano": {
     "Server": {
       "ip": "{LocalIP}",
-      "port": 5003,
+      "port": 5005,
       "certUrl": "",
       "certPwd": "",
       "weight": 1
@@ -23,7 +23,7 @@
         },
         "Service": {
           "Id": null,
-          "Name": "Shop.Identity",
+          "Name": "Shop.Order",
           "tags": null,
           "EnableTagOverride": false,
           "meta": null,

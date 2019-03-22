@@ -9,8 +9,8 @@
   "AllowedHosts": "*",
   "Uragano": {
     "Server": {
-      "ip": "192.168.1.129",
-      "port": 5003,
+      "ip": "{LocalIP}",
+      "port": 5005,
       "certUrl": "",
       "certPwd": "",
       "weight": 1
@@ -24,7 +24,7 @@
         },
         "Service": {
           "Id": null,
-          "Name": "Shop.Identity",
+          "Name": "Shop.Order",
           "tags": null,
           "EnableTagOverride": false,
           "meta": null,
