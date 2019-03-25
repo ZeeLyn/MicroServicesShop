@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `OrderDetail` (
   `OrderCode` varchar(255) DEFAULT NULL,
   `GoodsId` int(11) DEFAULT NULL,
   `Count` int(11) DEFAULT NULL,
+  `Price` decimal(10,2) DEFAULT NULL,
   `CreatedOn` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
             ");
