@@ -11,7 +11,7 @@ using Shop.IGoods;
 
 namespace Shop.BasketService
 {
-    public class BasketService : IBasketService
+    public class BasketService : IBasketService, ICapSubscribe
     {
         private IGoodsService GoodsService { get; }
 

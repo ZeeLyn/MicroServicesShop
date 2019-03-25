@@ -20,7 +20,9 @@ namespace Shop.GoodsService
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Dapper.ExecuteAsync(
-                @"SET FOREIGN_KEY_CHECKS=0;CREATE TABLE IF NOT EXISTS `Category` (
+                @"
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+SET FOREIGN_KEY_CHECKS=0;CREATE TABLE IF NOT EXISTS `Category` (
   `Id` int(11) NOT NULL,
   `Name` varchar(255) DEFAULT NULL,
   PRIMARY KEY(`Id`)

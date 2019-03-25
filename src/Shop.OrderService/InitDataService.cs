@@ -20,7 +20,9 @@ namespace Shop.OrderService
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Dapper.ExecuteAsync(
-                @"SET FOREIGN_KEY_CHECKS=0;
+                @"
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+SET FOREIGN_KEY_CHECKS=0;
 CREATE TABLE IF NOT EXISTS `Order` (
   `OrderCode` varchar(255) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
@@ -46,6 +48,6 @@ CREATE TABLE IF NOT EXISTS `OrderDetail` (
         {
             await Task.CompletedTask;
         }
-        
+
     }
 }
