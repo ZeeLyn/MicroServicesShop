@@ -49,6 +49,8 @@ namespace Shop.BasketService
             return (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Sum(p => p.Value);
         }
 
+        #region check out
+
         public async Task<bool> CheckOut(int userid, List<int> goodsId)
         {
             var basket = (await RedisHelper.HGetAllAsync<int>(userid.ToString())).Select(p => new BasketBase
@@ -74,5 +76,6 @@ namespace Shop.BasketService
         {
             await RedisHelper.HDelAsync(checkOut.UserId.ToString(), checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
         }
+        #endregion
     }
 }
