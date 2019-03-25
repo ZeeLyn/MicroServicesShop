@@ -28,6 +28,7 @@ namespace Shop.OrderService
                     })
                 .ConfigureServices((context, service) =>
                 {
+                    service.AddHostedService<InitDataService>();
                     service.AddUragano(context.Configuration, builder =>
                     {
                         builder.AddServer();
@@ -35,7 +36,7 @@ namespace Shop.OrderService
                         builder.AddConsul();
                     });
                     service.AddScoped<IDapper, MySqlDapper>();
-                    service.AddHostedService<InitDataService>();
+
                     var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
                     var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
                     var rabbitPassword = context.Configuration.GetValue<string>("RabbitMQ:Password");
@@ -55,7 +56,7 @@ namespace Shop.OrderService
                             r.Password = rabbitPassword;
                         });
                     });
-                    
+
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

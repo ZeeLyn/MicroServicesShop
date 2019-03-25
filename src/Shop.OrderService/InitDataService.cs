@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Dapper.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Shop.OrderService
 {
@@ -12,13 +10,17 @@ namespace Shop.OrderService
     {
         private IDapper Dapper { get; }
 
-        public InitDataService(IDapper dapper)
+        private ILogger Logger { get; }
+
+        public InitDataService(IDapper dapper, ILogger<InitDataService> logger)
         {
             Dapper = dapper;
+            Logger = logger;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            //Logger.LogError("Exec order database init service!");
             await Dapper.ExecuteAsync(
                 @"
 SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

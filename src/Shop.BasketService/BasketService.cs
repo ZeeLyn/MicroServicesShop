@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
-using Exceptionless;
 using Microsoft.Extensions.Logging;
 using Shop.Common.Basket;
 using Shop.IBasket;
