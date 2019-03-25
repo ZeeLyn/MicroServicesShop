@@ -155,7 +155,8 @@ namespace Shop.OrderService
                 GoodsInfos = model.Basket.Select(i => new GoodsInfo
                 {
                     Count = i.Count,
-                    GoodsId = i.GoodsId
+                    GoodsId = i.GoodsId,
+                    Price = i.Price
                 }).ToList()
             });
             return result == null ? null : model;
