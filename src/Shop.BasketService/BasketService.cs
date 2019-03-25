@@ -12,7 +12,7 @@ namespace Shop.BasketService
     {
         private IGoodsService GoodsService { get; }
 
-        private readonly ICapPublisher CapBus;
+        private ICapPublisher CapBus { get; }
 
         public BasketService(IGoodsService goodsService, ICapPublisher capPublisher)
         {
@@ -65,15 +65,14 @@ namespace Shop.BasketService
             return true;
         }
 
-        public async Task CheckOutCallback(List<int> goodsId)
+        /// <summary>
+        /// Checkout call back
+        /// </summary>
+        /// <param name="checkOut"></param>
+        /// <returns></returns>
+        public async Task CheckOutCallback(CheckOut checkOut)
         {
-
+            await RedisHelper.HDelAsync(checkOut.UserId.ToString(), checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
         }
-
-        //[CapSubscribe("route.basket.checkout")]
-        //public void CapSubscribe(CheckOut checkOut)
-        //{
-
-        //}
     }
 }
