@@ -29,6 +29,7 @@ namespace Shop.IdentityService
                 })
                 .ConfigureServices((context, service) =>
                 {
+                    service.AddHostedService<InitDatabaseHostedService>();
                     service.AddUragano(context.Configuration, builder =>
                     {
                         builder.AddServer();
