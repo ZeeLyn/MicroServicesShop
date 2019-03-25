@@ -34,7 +34,6 @@
     },
     "Caching": {
       "Redis": {
-        "Caching": "Uragano.Caching.Redis.RedisPartitionCaching",
         "KeyPrefix": "Uragano",
         "ExpireSeconds": 60,
         "KeyGenerator": null,

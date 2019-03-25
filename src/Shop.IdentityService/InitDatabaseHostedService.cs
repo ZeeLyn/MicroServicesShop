@@ -20,7 +20,7 @@ namespace Shop.IdentityService
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Dapper.ExecuteAsync(@"SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
-CREATE TABLE IF NOT EXISTS `Users1` (
+CREATE TABLE IF NOT EXISTS `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
