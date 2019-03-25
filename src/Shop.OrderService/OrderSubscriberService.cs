@@ -54,7 +54,7 @@ namespace Shop.OrderService
                         OrderCode = orderCode,
                         order.UserId,
                         PayCode = string.Empty,
-                        Amount = 0,
+                        Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
                         PayStatus = (int)PayStatus.UnComplete,
                         OrderStatus = (int)OrderStatus.Submmit,
                         CreatedOn = strDateNow,

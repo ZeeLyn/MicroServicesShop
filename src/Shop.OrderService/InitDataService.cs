@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `OrderCode` varchar(255) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `PayCode` varchar(50) DEFAULT NULL,
-  `Amount` decimal(10,0) DEFAULT NULL,
+  `Amount` decimal(10,2) DEFAULT NULL,
   `PayStatus` tinyint(4) DEFAULT NULL,
   `OrderStatus` tinyint(4) DEFAULT NULL,
   `CreatedOn` datetime DEFAULT NULL,
