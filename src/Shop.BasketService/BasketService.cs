@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
+using Exceptionless;
+using Microsoft.Extensions.Logging;
 using Shop.Common.Basket;
 using Shop.IBasket;
 using Shop.IGoods;
@@ -13,11 +16,13 @@ namespace Shop.BasketService
         private IGoodsService GoodsService { get; }
 
         private ICapPublisher CapBus { get; }
+        private ILogger Logger { get; }
 
-        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher)
+        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher,Logger<BasketService> logger)
         {
             GoodsService = goodsService;
             CapBus = capPublisher;
+            Logger = logger;
         }
 
         public async Task Add(int userid, int goodsId, int count)
@@ -72,7 +77,18 @@ namespace Shop.BasketService
         /// <returns></returns>
         public async Task CheckOutCallback(CheckOut checkOut)
         {
-            await RedisHelper.HDelAsync(checkOut.UserId.ToString(), checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
+            try
+            {
+                Logger.LogError("CheckOutCallback");
+                await RedisHelper.HDelAsync(checkOut.UserId.ToString(), checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "CheckOutCallback");
+                e.ToExceptionless().Submit();
+                throw;
+            }
+
         }
     }
 }

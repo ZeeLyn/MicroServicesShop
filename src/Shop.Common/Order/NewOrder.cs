@@ -4,16 +4,26 @@ using System.Text;
 
 namespace Shop.Common.Order
 {
-    /// <summary>
-    /// new order
-    /// </summary>
-    public class NewOrder
+    public class NewOrderAdd
     {
-
         /// <summary>
         /// user id
         /// </summary>
         public int UserId { get; set; }
+        /// <summary>
+        /// goods info list
+        /// </summary>
+        public List<GoodsInfo> GoodsInfos { get; set; }
+    }
+    /// <summary>
+    /// new order
+    /// </summary>
+    public class NewOrder: NewOrderAdd
+    {
+        ///// <summary>
+        ///// user id
+        ///// </summary>
+        //public int UserId { get; set; }
 
         ///// <summary>
         ///// pay uid
@@ -44,10 +54,10 @@ namespace Shop.Common.Order
         /// order completed time
         /// </summary>
         public DateTime CompletedTime { get; set; }
-        /// <summary>
-        /// goods info list
-        /// </summary>
-        public List<GoodsInfo> GoodsInfos { get; set; }
+        ///// <summary>
+        ///// goods info list
+        ///// </summary>
+        //public List<GoodsInfo> GoodsInfos { get; set; }
     }
     
     public class NewOrderResult

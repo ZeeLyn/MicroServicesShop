@@ -36,7 +36,7 @@ namespace Shop.OrderService
                     });
                     service.AddScoped<IDapper, MySqlDapper>();
                     //SeedData.Initialize(service);
-                    //service.AddHostedService<InitDataService>();
+                    service.AddHostedService<InitDataService>();
                     var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
                     var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
                     var rabbitPassword = context.Configuration.GetValue<string>("RabbitMQ:Password");

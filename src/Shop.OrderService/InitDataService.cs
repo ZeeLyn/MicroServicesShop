@@ -23,7 +23,7 @@ namespace Shop.OrderService
                 @"SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `Order`;CREATE TABLE `Order` (
   `OrderCode` varchar(255) DEFAULT NULL,
-  `UserId` varchar(50) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
   `PayCode` varchar(50) DEFAULT NULL,
   `Amount` decimal(10,0) DEFAULT NULL,
   `PayStatus` tinyint(4) DEFAULT NULL,
