@@ -41,7 +41,7 @@ namespace Shop.OrderService
             var dateNow = DateTime.Now;
             var strDateNow = dateNow.ToString("yyyy-MM-dd HH:mm:ss");
             var lstGoodsDetail = order.GoodsInfos.Select(i =>
-                $"insert into `OrderDetail` (OrderCode,GoodsId,Count,Price,Amount,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},{i.Count * i.Price},'{strDateNow}')");
+                $"insert into `OrderDetail` (OrderCode,GoodsId,Count,Price,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},'{strDateNow}')");
 
             Dapper.BeginTransaction();
             try
