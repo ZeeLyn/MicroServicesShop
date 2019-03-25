@@ -8,13 +8,14 @@ namespace Shop.Common.Basket
     {
         public string Title { get; set; }
 
-        public decimal Price { get; set; }
+
 
         public string Pic { get; set; }
     }
 
     public class BasketBase
     {
+        public decimal Price { get; set; }
         public int GoodsId { get; set; }
 
         public int Count { get; set; }
