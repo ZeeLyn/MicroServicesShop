@@ -136,7 +136,6 @@ namespace Shop.OrderService
                 else
                 {
                     //log
-                    Dapper.RollbackTransaction();
                     throw new Exception($"order code is ：{orderCode},order status was not changed.");
                 }
             }

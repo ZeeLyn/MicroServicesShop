@@ -35,7 +35,6 @@ namespace Shop.OrderService
                         builder.AddConsul();
                     });
                     service.AddScoped<IDapper, MySqlDapper>();
-                    //SeedData.Initialize(service);
                     service.AddHostedService<InitDataService>();
                     var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
                     var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
