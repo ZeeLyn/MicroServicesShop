@@ -18,7 +18,7 @@ namespace Shop.BasketService
         private ICapPublisher CapBus { get; }
         private ILogger Logger { get; }
 
-        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher,Logger<BasketService> logger)
+        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher, ILogger<BasketService> logger)
         {
             GoodsService = goodsService;
             CapBus = capPublisher;
@@ -77,17 +77,24 @@ namespace Shop.BasketService
         /// </summary>
         /// <param name="checkOut"></param>
         /// <returns></returns>
+        [CapSubscribe("CheckOutCallback")]
         public async Task CheckOutCallback(CheckOut checkOut)
         {
             try
             {
-                Logger.LogError("CheckOutCallback");
-                await RedisHelper.HDelAsync(checkOut.UserId.ToString(), checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
+                if (checkOut != null)
+                {
+                    await RedisHelper.HDelAsync(checkOut.UserId.ToString(),
+                        checkOut.Basket.Select(p => p.GoodsId.ToString()).ToArray());
+                }
+                else
+                {
+                    Logger.LogError("CheckOutCallback has error");
+                }
             }
             catch (Exception e)
             {
                 Logger.LogError(e, "CheckOutCallback");
-                e.ToExceptionless().Submit();
                 throw;
             }
 

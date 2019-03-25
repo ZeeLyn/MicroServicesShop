@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper.Extensions;
 using DotNetCore.CAP;
 using Exceptionless;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shop.Common.Basket;
 using Shop.Common.Order;
@@ -21,9 +22,12 @@ namespace Shop.OrderService
     {
         private IDapper Dapper { get; }
 
-        public OrderSubscriberService(IDapper dapper)
+        private ILogger Logger { get; }
+
+        public OrderSubscriberService(IDapper dapper, ILogger<OrderSubscriberService> logger)
         {
             Dapper = dapper;
+            Logger = logger;
         }
 
         /// <summary>
@@ -35,8 +39,9 @@ namespace Shop.OrderService
         {
             var orderCode = Guid.NewGuid().ToString("N");
             var dateNow = DateTime.Now;
+            var strDateNow = dateNow.ToString("yyyy-MM-dd HH:mm:ss");
             var lstGoodsDetail = order.GoodsInfos.Select(i =>
-                $"insert into `OrderDetail` (OrderCode,GoodsId,Count,Price,Amount,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},{i.Count * i.Price},'{dateNow}')");
+                $"insert into `OrderDetail` (OrderCode,GoodsId,Count,Price,Amount,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},{i.Count * i.Price},'{strDateNow}')");
 
             Dapper.BeginTransaction();
             try
@@ -52,7 +57,7 @@ namespace Shop.OrderService
                         Amount = 0,
                         PayStatus = (int)PayStatus.UnComplete,
                         OrderStatus = (int)OrderStatus.Submmit,
-                        CreatedOn = dateNow,
+                        CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
 
@@ -62,7 +67,7 @@ namespace Shop.OrderService
             catch (Exception e)
             {
                 //log e.message
-                e.ToExceptionless().Submit();
+                Logger.LogError(e, "submmit order has error");
                 Dapper.RollbackTransaction();
                 return null;
             }
@@ -145,7 +150,7 @@ namespace Shop.OrderService
         [CapSubscribe("route.basket.checkout")]
         public async Task<CheckOut> CheckReceivedMessage(CheckOut model)
         {
-            await Submmit(new NewOrderAdd
+           var result= await Submmit(new NewOrderAdd
             {
                 UserId = model.UserId,
                 GoodsInfos = model.Basket.Select(i => new GoodsInfo
@@ -154,7 +159,7 @@ namespace Shop.OrderService
                     GoodsId = i.GoodsId
                 }).ToList()
             });
-            return model;
+            return result == null ? null : model;
         }
     }
 }

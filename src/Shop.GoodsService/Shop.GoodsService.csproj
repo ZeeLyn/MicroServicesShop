@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="uragano.Development.json" />
     <None Remove="uragano.json" />
     <None Remove="uragano.Production.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="uragano.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

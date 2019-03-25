@@ -30,8 +30,9 @@ namespace Shop.OrderService
         {
             var orderCode = Guid.NewGuid().ToString("N");
             var dateNow = DateTime.Now;
+            var strDateNow = dateNow.ToString("yyyy-MM-dd HH:mm:ss");
             var lstGoodsDetail = order.GoodsInfos.Select(i =>
-                $"insert into OrderDetail(OrderCode,GoodsId,Count,Price,Amount,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},{i.Count * i.Price},'{dateNow}')");
+                $"insert into OrderDetail(OrderCode,GoodsId,Count,Price,Amount,CreatedOn) values('{orderCode}',{i.GoodsId},{i.Count},{i.Price},{i.Count * i.Price},'{strDateNow}')");
 
             Dapper.BeginTransaction();
             try
@@ -46,7 +47,7 @@ namespace Shop.OrderService
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
                         PayStatus = PayStatus.UnComplete,
-                        CreatedOn = dateNow,
+                        CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
 

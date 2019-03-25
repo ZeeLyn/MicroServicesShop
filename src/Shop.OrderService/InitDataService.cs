@@ -21,7 +21,7 @@ namespace Shop.OrderService
         {
             await Dapper.ExecuteAsync(
                 @"SET FOREIGN_KEY_CHECKS=0;
-DROP TABLE IF EXISTS `Order`;CREATE TABLE `Order` (
+CREATE TABLE IF NOT EXISTS `Order` (
   `OrderCode` varchar(255) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `PayCode` varchar(50) DEFAULT NULL,
@@ -31,8 +31,7 @@ DROP TABLE IF EXISTS `Order`;CREATE TABLE `Order` (
   `CreatedOn` datetime DEFAULT NULL,
   `CompletedTime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-DROP TABLE IF EXISTS `OrderDetail`;
-CREATE TABLE `OrderDetail` (
+CREATE TABLE IF NOT EXISTS `OrderDetail` (
   `OrderCode` varchar(255) DEFAULT NULL,
   `GoodsId` int(11) DEFAULT NULL,
   `Count` int(11) DEFAULT NULL,
