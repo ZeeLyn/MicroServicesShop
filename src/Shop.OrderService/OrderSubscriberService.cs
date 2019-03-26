@@ -62,7 +62,7 @@ namespace Shop.OrderService
                     });
 
                 Dapper.CommitTransaction();
-                return new NewOrderResult {CreatedOn = dateNow, OrderCode = orderCode};
+                return new NewOrderResult { CreatedOn = dateNow, OrderCode = orderCode };
             }
             catch (Exception e)
             {
@@ -84,7 +84,7 @@ namespace Shop.OrderService
             try
             {
                 var order = await Dapper.QueryFirstOrDefaultAsync<NewOrderBase>(
-                    "select OrderCode,OrderStatus,PayStatus from Order where OrderCode=@orderCode", new {orderCode});
+                    "select OrderCode,OrderStatus,PayStatus from Order where OrderCode=@orderCode", new { orderCode });
                 if (order.OrderStatus == status)
                 {
                     //log
@@ -132,7 +132,7 @@ namespace Shop.OrderService
                 Dapper.BeginTransaction();
                 var result = await Dapper.ExecuteAsync(
                     "update Order set OrderStatus=@status where OrderCode=@orderCode",
-                    new {orderCode});
+                    new { orderCode });
                 if (result == 1)
                 {
                     Dapper.CommitTransaction();

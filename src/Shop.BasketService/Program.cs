@@ -55,7 +55,6 @@ namespace Shop.BasketService
                         UserName = rabbitUser,
                         Password = rabbitPassword
                     });
-                    service.AddHostedService<InitRabbitMQService>();
                     var csRedis = new CSRedis.CSRedisClient(context.Configuration.GetValue<string>("RedisConnection"));
                     RedisHelper.Initialization(csRedis);
                 }).ConfigureLogging((context, builder) =>
