@@ -5,6 +5,7 @@ using Dapper.Extensions;
 using DotNetCore.CAP;
 using Exceptionless;
 using Microsoft.Extensions.Logging;
+using Shop.Common;
 using Shop.Common.Basket;
 using Shop.Common.Order;
 using Shop.IOrder;
@@ -29,7 +30,7 @@ namespace Shop.OrderService
         /// </summary>
         /// <param name="order">order info</param>
         /// <returns></returns>
-        public async Task<NewOrderResult> Submmit(NewOrderAdd order)
+        public async Task<ResponseResult<NewOrderResult>> Submmit(NewOrderAdd order)
         {
             var orderCode = Guid.NewGuid().ToString("N");
             var dateNow = DateTime.Now;
@@ -49,21 +50,31 @@ namespace Shop.OrderService
                         order.UserId,
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
-                        PayStatus = (int)PayStatus.UnComplete,
-                        OrderStatus = (int)OrderStatus.Submmit,
+                        PayStatus = (int) PayStatus.UnComplete,
+                        OrderStatus = (int) OrderStatus.Submmit,
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
 
                 Dapper.CommitTransaction();
-                return new NewOrderResult { CreatedOn = dateNow, OrderCode = orderCode };
+                return new ResponseResult<NewOrderResult>
+                {
+                    Success = true,
+                    Result = new NewOrderResult {CreatedOn = dateNow, OrderCode = orderCode},
+                    Error = ""
+                };
             }
             catch (Exception e)
             {
                 //log e.message
                 Logger.LogError(e, "submmit order has error");
                 Dapper.RollbackTransaction();
-                return null;
+                return new ResponseResult<NewOrderResult>
+                {
+                    Success = false,
+                    Result = null,
+                    Error = "submmit order has error"
+                };
             }
         }
 

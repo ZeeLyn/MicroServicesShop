@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Shop.Common;
 using Shop.Common.Order;
 using Uragano.Abstractions;
 
@@ -15,7 +16,7 @@ namespace Shop.IOrder
         /// <param name="order">order info</param>
         /// <returns></returns>
         [ServiceRoute("submmit")]
-        Task<NewOrderResult> Submmit(NewOrderAdd order);
+        Task<ResponseResult<NewOrderResult>> Submmit(NewOrderAdd order);
 
         /// <summary>
         /// update order status
