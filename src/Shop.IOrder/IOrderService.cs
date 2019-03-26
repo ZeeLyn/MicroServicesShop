@@ -15,7 +15,7 @@ namespace Shop.IOrder
         /// <param name="order">order info</param>
         /// <returns></returns>
         [ServiceRoute("submmit")]
-        Task<NewOrderResult> Submmit(NewOrder order);
+        Task<NewOrderResult> Submmit(NewOrderAdd order);
 
         /// <summary>
         /// update order status

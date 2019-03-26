@@ -55,8 +55,8 @@ namespace Shop.OrderService
                         order.UserId,
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
-                        PayStatus = (int)PayStatus.UnComplete,
-                        OrderStatus = (int)OrderStatus.Submmit,
+                        PayStatus = (int) PayStatus.UnComplete,
+                        OrderStatus = (int) OrderStatus.Submmit,
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
@@ -88,13 +88,15 @@ namespace Shop.OrderService
                 if (order.OrderStatus == status)
                 {
                     //log
-                    throw new Exception($"order code is ：{orderCode},updated status is the same to the old status.");
+                    Logger.LogError($"order code is ：{orderCode},updated status is the same to the old status.");
+                    return false;
                 }
 
                 if (order.OrderStatus == OrderStatus.Delete) //deleted order cann't be handle
                 {
                     //log
-                    throw new Exception($"order code is ：{orderCode},deleted order cann't be handle.");
+                    Logger.LogError($"order code is ：{orderCode},deleted order cann't be handle.");
+                    return false;
                 }
 
                 if (order.OrderStatus == OrderStatus.Cancel) //cancelled order can only be delete
@@ -102,7 +104,8 @@ namespace Shop.OrderService
                     if (status != OrderStatus.Delete)
                     {
                         //log
-                        throw new Exception($"order code is ：{orderCode},cancelled order can only be delete.");
+                        Logger.LogError($"order code is ：{orderCode},cancelled order can only be delete.");
+                        return false;
                     }
                 }
 
@@ -111,7 +114,8 @@ namespace Shop.OrderService
                     if (status != OrderStatus.Cancel)
                     {
                         //log
-                        throw new Exception($"order code is ：{orderCode},submmitted order can only be cancelled.");
+                        Logger.LogError($"order code is ：{orderCode},submmitted order can only be cancelled.");
+                        return false;
                     }
                 }
 
@@ -120,7 +124,8 @@ namespace Shop.OrderService
                     if (status != OrderStatus.Delete)
                     {
                         //log
-                        throw new Exception($"order code is ：{orderCode},completed order can only be deleted.");
+                        Logger.LogError($"order code is ：{orderCode},completed order can only be deleted.");
+                        return false;
                     }
                 }
 
@@ -136,12 +141,13 @@ namespace Shop.OrderService
                 else
                 {
                     //log
-                    throw new Exception($"order code is ：{orderCode},order status was not changed.");
+                    Logger.LogError($"order code is ：{orderCode},order status was not changed.");
+                    return false;
                 }
             }
             catch (Exception e)
             {
-                e.ToExceptionless().Submit();
+                Logger.LogError(e, $"order code is ：{orderCode},order status changed has error.");
                 return false;
             }
         }
@@ -149,7 +155,7 @@ namespace Shop.OrderService
         [CapSubscribe("route.basket.checkout")]
         public async Task<CheckOut> CheckReceivedMessage(CheckOut model)
         {
-           var result= await Submmit(new NewOrderAdd
+            var result = await Submmit(new NewOrderAdd
             {
                 UserId = model.UserId,
                 GoodsInfos = model.Basket.Select(i => new GoodsInfo
@@ -159,7 +165,14 @@ namespace Shop.OrderService
                     Price = i.Price
                 }).ToList()
             });
-            return result == null ? null : model;
+            if (result == null)
+            {
+                throw new Exception("submmit order failed");
+            }
+            else
+            {
+                return model;
+            }
         }
     }
 }
