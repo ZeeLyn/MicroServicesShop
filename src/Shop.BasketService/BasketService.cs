@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using DotNetCore.CAP;
 using Microsoft.Extensions.Logging;
 using Shop.Common.Basket;
+using Shop.Common.Order;
 using Shop.IBasket;
 using Shop.IGoods;
+using Shop.IOrder;
 
 namespace Shop.BasketService
 {
@@ -14,14 +16,17 @@ namespace Shop.BasketService
     {
         private IGoodsService GoodsService { get; }
 
+        private IOrderService OrderService { get; }
+
         private ICapPublisher CapBus { get; }
         private ILogger Logger { get; }
 
-        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher, ILogger<BasketService> logger)
+        public BasketService(IGoodsService goodsService, ICapPublisher capPublisher, ILogger<BasketService> logger, IOrderService orderService)
         {
             GoodsService = goodsService;
             CapBus = capPublisher;
             Logger = logger;
+            OrderService = orderService;
         }
 
         public async Task Add(int userid, int goodsId, int count)
@@ -55,22 +60,32 @@ namespace Shop.BasketService
 
         #region check out
 
-        public async Task<bool> CheckOut(int userid, List<int> goodsId)
+        public async Task<(bool Succeed, string OrderCode, string ErrorMessage)> CheckOut(int userid, List<int> goodsId)
         {
-            var basket = (await Get(userid)).Where(p => goodsId.Any(i => i == p.GoodsId)).Select(p => new BasketBase
+            var basket = (await Get(userid)).Where(p => goodsId.Any(i => i == p.GoodsId)).Select(p => new GoodsInfo
             {
                 GoodsId = p.GoodsId,
                 Count = p.Count,
                 Price = p.Price
             }).ToList();
 
-
-            await CapBus.PublishAsync("route.basket.checkout", new CheckOut
+            var result = await OrderService.Submmit(new NewOrderAdd
             {
                 UserId = userid,
-                Basket = basket
-            }, "CheckOutCallback");
-            return true;
+                GoodsInfos = basket
+            });
+
+            if (result.Success)
+            {
+                await RedisHelper.HDelAsync(userid.ToString(), goodsId.Select(p => p.ToString()).ToArray());
+            }
+
+            //await CapBus.PublishAsync("route.basket.checkout", new CheckOut
+            //{
+            //    UserId = userid,
+            //    Basket = basket
+            //}, "CheckOutCallback");
+            return (result.Success, result.Result.OrderCode, result.Error);
         }
 
         /// <summary>

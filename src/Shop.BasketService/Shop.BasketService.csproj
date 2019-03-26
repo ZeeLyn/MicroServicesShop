@@ -36,14 +36,15 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.313" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.313" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.313" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.315" />
+    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.315" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.315" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shop.IBasket\Shop.IBasket.csproj" />
     <ProjectReference Include="..\Shop.IGoods\Shop.IGoods.csproj" />
+    <ProjectReference Include="..\Shop.IOrder\Shop.IOrder.csproj" />
   </ItemGroup>
 
 </Project>

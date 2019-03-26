@@ -2,11 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Extensions;
-using DotNetCore.CAP;
-using Exceptionless;
 using Microsoft.Extensions.Logging;
 using Shop.Common;
-using Shop.Common.Basket;
 using Shop.Common.Order;
 using Shop.IOrder;
 
@@ -50,8 +47,8 @@ namespace Shop.OrderService
                         order.UserId,
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
-                        PayStatus = (int) PayStatus.UnComplete,
-                        OrderStatus = (int) OrderStatus.Submmit,
+                        PayStatus = (int)PayStatus.UnComplete,
+                        OrderStatus = (int)OrderStatus.Submmit,
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
@@ -60,7 +57,7 @@ namespace Shop.OrderService
                 return new ResponseResult<NewOrderResult>
                 {
                     Success = true,
-                    Result = new NewOrderResult {CreatedOn = dateNow, OrderCode = orderCode},
+                    Result = new NewOrderResult { CreatedOn = dateNow, OrderCode = orderCode },
                     Error = ""
                 };
             }

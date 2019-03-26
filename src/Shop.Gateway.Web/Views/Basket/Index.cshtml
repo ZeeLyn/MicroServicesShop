@@ -37,7 +37,7 @@
             },
             mounted: function () {
                 var self = this;
-                axios.get("http://localhost:9001/api/basket/detail",
+                axios.get("/api/basket/detail",
                     {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("access_token")
@@ -88,7 +88,7 @@
                 del: function (index, item) {
                     if (confirm("Are you sure delete it?")) {
                         var self = this;
-                        axios.delete("http://localhost:9001/api/basket/remove/" + item.goodsId,
+                        axios.delete("/api/basket/remove/" + item.goodsId,
                             {
                                 headers: {
                                     Authorization: "Bearer " + localStorage.getItem("access_token")
@@ -121,12 +121,12 @@
                             }
 
                         }).then(function (res) {
-
-                            alert("Ok");
+                            window.location.href = '/order/detail/' + res.data;
                         }).catch(function (err) {
                             if (err.response.status == 401) {
                                 window.location.href = "/account/login";
-                            }
+                            } else
+                                alert(err.response.data);
                         }).then(function () {
 
                         });

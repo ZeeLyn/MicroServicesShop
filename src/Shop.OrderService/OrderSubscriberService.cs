@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper.Extensions;
 using DotNetCore.CAP;
-using Exceptionless;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Shop.Common.Basket;
 using Shop.Common.Order;
 
@@ -55,8 +51,8 @@ namespace Shop.OrderService
                         order.UserId,
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
-                        PayStatus = (int) PayStatus.UnComplete,
-                        OrderStatus = (int) OrderStatus.Submmit,
+                        PayStatus = (int)PayStatus.UnComplete,
+                        OrderStatus = (int)OrderStatus.Submmit,
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });

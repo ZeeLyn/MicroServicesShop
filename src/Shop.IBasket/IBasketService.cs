@@ -20,6 +20,6 @@ namespace Shop.IBasket
 
         Task<int> Count(int userid);
 
-        Task<bool> CheckOut(int userid, List<int> goodsId);
+        Task<(bool Succeed, string OrderCode, string ErrorMessage)> CheckOut(int userid, List<int> goodsId);
     }
 }

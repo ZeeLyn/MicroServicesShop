@@ -60,8 +60,10 @@ namespace Shop.Gateway.Basket.Controllers
         {
             if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
                 return Unauthorized();
-            await BasketService.CheckOut(userid, goods);
-            return Ok();
+            var result = await BasketService.CheckOut(userid, goods);
+            if (result.Succeed)
+                return Ok(result.OrderCode);
+            return BadRequest(result.ErrorMessage);
         }
     }
 }
