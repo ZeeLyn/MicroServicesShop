@@ -34,7 +34,7 @@ namespace Shop.IOrder
         /// <param name="userId">user id</param>
         /// <returns></returns>
         [ServiceRoute("list")]
-        Task<List<OrderLstResult>> GetAllOrder(int userId);
+        Task<List<OrderItemResult>> GetAllOrder(int userId);
 
         /// <summary>
         /// get specified order by order code.
