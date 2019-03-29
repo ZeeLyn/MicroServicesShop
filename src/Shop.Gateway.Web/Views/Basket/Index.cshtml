@@ -56,7 +56,10 @@
                             });
                         });
                     }).catch(function (err) {
-
+                        if (err.response.status == 401) {
+                            window.location.href = "/account/login";
+                        } else
+                            alert(err.response.data);
                     }).then(function () {
 
                     });
@@ -99,7 +102,10 @@
                                 basket.LoadBasket();
                                 console.log(self.detail);
                             }).catch(function (err) {
-
+                                if (err.response.status == 401) {
+                                    window.location.href = "/account/login";
+                                } else
+                                    alert(err.response.data);
                             }).then(function () {
 
                             });
@@ -113,7 +119,7 @@
                             checkouts.push(item.goodsId);
                         }
                     });
-                    axios.post("http://localhost:9001/api/basket/checkout",
+                    axios.post("/api/basket/checkout",
                         checkouts,
                         {
                             headers: {
@@ -121,7 +127,7 @@
                             }
 
                         }).then(function (res) {
-                            window.location.href = '/order/detail/' + res.data;
+                            window.location.href = '/profile/order/detail/' + res.data;
                         }).catch(function (err) {
                             if (err.response.status == 401) {
                                 window.location.href = "/account/login";

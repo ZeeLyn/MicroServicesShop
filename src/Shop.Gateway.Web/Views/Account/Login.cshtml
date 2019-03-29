@@ -55,7 +55,7 @@
             {
                 SignUp: function () {
                     var self = this;
-                    axios.post("/api/account/login",
+                    axios.post("http://localhost:9001/api/account/login",
                         {
                             email: self.email,
                             password: self.password

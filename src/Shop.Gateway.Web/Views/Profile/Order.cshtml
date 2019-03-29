@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewData["Title"] = "Order";
+}
+
+<h1>My order</h1>
+
+<div id="app">
+    <ul class="orders">
+        <li v-for="(item,index) in list" class="img-thumbnail">
+            <div class="header">
+                <span>
+                    OrderCode:  {{item.orderCode}}
+                </span>
+                <span>
+                    {{item.createdOn}}
+                </span>
+            </div>
+            <div class="goods">
+                <label v-for="goods in item.goodsInfos"><img :src="goods.pic" />{{goods.title}}</label>
+            </div>
+            <div class="info">
+                <span>
+                    Amount:  $ {{item.amount}}
+                </span>
+                <span v-if="item.payStatus==1">Status: Paid</span>
+                <span v-else>Status: Unpaid</span>
+            </div>
+            <div>
+                <a v-if="item.payStatus==0" href="#">Pay now!</a>
+                <a v-if="item.payStatus==0" href="javascript:;" v-on:click="del(index,item)">Cancel</a>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+@section Scripts{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                list: [],
+                items: 0,
+                total: 0
+            },
+            mounted: function () {
+                var self = this;
+                axios.get("http://localhost:9001/api/order/list",
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("access_token")
+                        }
+                    }).then(function (res) {
+                        $(res.data).each(function (index, item) {
+                            self.list.push(item);
+                        });
+                    }).catch(function (err) {
+                        if (err.response.status == 401) {
+                            window.location.href = "/account/login";
+                        } else
+                            alert(err.response.data);
+                    }).then(function () {
+
+                    });
+            },
+            methods: {
+
+            }
+        });
+    </script>
+}
+
+@section Styles{
+    <style>
+        .orders { width: 100%; }
+        .orders .header { border-bottom: 1px #eee solid; display: flex; justify-content: space-between; padding: 5px 0; }
+        .goods { text-align: left; }
+        .goods label { display: flex; flex-direction: column; margin: 10px; align-items: center; width: 120px; }
+        .goods label img { width: 100px; height: 100px; }
+        .orders .info { text-align: right; }
+    </style>
+}

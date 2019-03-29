@@ -12,5 +12,10 @@ namespace Shop.Gateway.Web.Controllers
         {
             return View();
         }
+
+        public IActionResult Order()
+        {
+            return View();
+        }
     }
 }

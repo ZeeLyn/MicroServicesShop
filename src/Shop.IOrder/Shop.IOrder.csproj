@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Uragano.Abstractions" Version="0.0.1-preview.315" />
+    <PackageReference Include="Uragano.Abstractions" Version="0.0.1-preview.400" />
   </ItemGroup>
 
   <ItemGroup>
