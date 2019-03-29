@@ -36,7 +36,7 @@ namespace Shop.GoodsService
                     });
 
                     service.AddScoped<IDapper, MySqlDapper>();
-                    service.AddSingleton<IHostedService, InitDataService>();
+                    service.AddHostedService<InitDataService>();
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

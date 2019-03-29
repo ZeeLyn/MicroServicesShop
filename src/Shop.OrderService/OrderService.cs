@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Extensions;
 using Microsoft.Extensions.Logging;
 using Shop.Common;
 using Shop.Common.Order;
+using Shop.IGoods;
 using Shop.IOrder;
 
 namespace Shop.OrderService
@@ -16,10 +18,13 @@ namespace Shop.OrderService
     {
         private IDapper Dapper { get; }
         private ILogger Logger { get; }
-        public OrderService(IDapper dapper, ILogger<OrderSubscriberService> logger)
+        private IGoodsService GoodsService { get; }
+
+        public OrderService(IDapper dapper, ILogger<OrderSubscriberService> logger, IGoodsService goodsService)
         {
             Dapper = dapper;
             Logger = logger;
+            GoodsService = goodsService;
         }
 
         /// <summary>
@@ -47,8 +52,8 @@ namespace Shop.OrderService
                         order.UserId,
                         PayCode = string.Empty,
                         Amount = order.GoodsInfos.Sum(i => i.Price * i.Count),
-                        PayStatus = (int)PayStatus.UnComplete,
-                        OrderStatus = (int)OrderStatus.Submmit,
+                        PayStatus = (int) PayStatus.UnComplete,
+                        OrderStatus = (int) OrderStatus.Submmit,
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
@@ -57,7 +62,7 @@ namespace Shop.OrderService
                 return new ResponseResult<NewOrderResult>
                 {
                     Success = true,
-                    Result = new NewOrderResult { CreatedOn = dateNow, OrderCode = orderCode },
+                    Result = new NewOrderResult {CreatedOn = dateNow, OrderCode = orderCode},
                     Error = ""
                 };
             }
@@ -86,7 +91,7 @@ namespace Shop.OrderService
             try
             {
                 var order = await Dapper.QueryFirstOrDefaultAsync<NewOrderBase>(
-                    "select OrderCode,OrderStatus,PayStatus from Order where OrderCode=@orderCode", new { orderCode });
+                    "select OrderCode,OrderStatus,PayStatus from Order where OrderCode=@orderCode", new {orderCode});
                 if (order.OrderStatus == status)
                 {
                     //log
@@ -134,7 +139,7 @@ namespace Shop.OrderService
                 Dapper.BeginTransaction();
                 var result = await Dapper.ExecuteAsync(
                     "update Order set OrderStatus=@status where OrderCode=@orderCode",
-                    new { orderCode });
+                    new {orderCode});
                 if (result == 1)
                 {
                     Dapper.CommitTransaction();
@@ -154,5 +159,78 @@ namespace Shop.OrderService
             }
         }
 
+        /// <summary>
+        /// get all orders from user id.
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        public async Task<List<OrderLstResult>> GetAllOrder(int userId)
+        {
+            var lstOrder = await Dapper.QueryAsync<OrderLstResult>(
+                "select OrderCode,OrderStatus,CreatedOn from `Order` where UserId=@userId order by CreatedOn desc",
+                new {userId});
+            var lstCode = lstOrder.Select(i => i.OrderCode).ToList();
+            var lstOrderDetail = await Dapper.QueryAsync<NewOrderDetail>(
+                "select OrderCode,GoodsId,Count,Price from OrderDetail where OrderCode in @lstCode", new {lstCode});
+            var lstGoodsId = lstOrderDetail.Select(i => i.GoodsId).ToList();
+            var lstGoods = await GoodsService.GoodsInfos(lstGoodsId);
+            var result = new List<OrderLstResult>();
+            lstOrder.ForEach(i =>
+            {
+                var order = new OrderLstResult
+                {
+                    CreatedOn = i.CreatedOn,
+                    OrderCode = i.OrderCode,
+                    OrderStatus = i.OrderStatus,
+                    GoodsInfos = new List<GoodsInfoObj>()
+                };
+                var lstDetail = lstOrderDetail.Where(j => j.OrderCode == i.OrderCode).ToList();
+                lstDetail.ForEach(j =>
+                {
+                    var srcGoods = lstGoods.FirstOrDefault(k => k.Id == j.GoodsId);
+                    order.GoodsInfos.Add(new GoodsInfoObj
+                    {
+                        Count = j.Count,
+                        GoodsId = j.GoodsId,
+                        Price = j.Price,
+                        Pic = srcGoods?.Pic,
+                        Title = srcGoods?.Title
+                    });
+                });
+                result.Add(order);
+            });
+            return result;
+        }
+
+        /// <summary>
+        /// get specified order by order code.
+        /// </summary>
+        /// <param name="orderCode">order id</param>
+        /// <returns></returns>
+        public async Task<(bool Succeed, OrderItemResult Order, string ErrorMessage)> GetOrder(int userId, string orderCode)
+        {
+            var order = await Dapper.QueryFirstOrDefaultAsync<OrderItemResult>(
+                "select OrderCode,OrderStatus,PayStatus,CreatedOn from `Order` where OrderCode=@orderCode and UserId=@userId",
+                new {orderCode, userId});
+            if (order == null) return (false, null, "order not exists");
+            var lstDetail = await Dapper.QueryAsync<NewOrderDetail>(
+                "select OrderCode,GoodsId,Count,Price from OrderDetail where OrderCode=@orderCode", new {orderCode});
+            var lstGoodsId = lstDetail.Select(i => i.GoodsId).ToList();
+            var lstGoods = await GoodsService.GoodsInfos(lstGoodsId);
+            order.GoodsInfos = new List<GoodsInfoObj>();
+            lstDetail.ForEach(j =>
+            {
+                var srcGoods = lstGoods.FirstOrDefault(k => k.Id == j.GoodsId);
+                order.GoodsInfos.Add(new GoodsInfoObj
+                {
+                    Count = j.Count,
+                    GoodsId = j.GoodsId,
+                    Price = j.Price,
+                    Pic = srcGoods?.Pic,
+                    Title = srcGoods?.Title
+                });
+            });
+            return (true, order, "");
+        }
     }
 }

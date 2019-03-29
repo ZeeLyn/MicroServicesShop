@@ -213,3 +213,21 @@ services:
       - rabbitmq
       - mysql
 
+
+  shop.gateway.order:
+    image: ${DOCKER_REGISTRY-}shopgatewayorder
+    container_name: Shop.Gateway.Order
+    build:
+      context: .
+      dockerfile: src/Shop.Gateway.Order/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - TZ=Asia/Shanghai
+    ports:
+      - 8005:80
+    depends_on:
+      - consul
+    links:
+      - consul
+

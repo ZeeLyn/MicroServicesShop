@@ -32,6 +32,7 @@ namespace Shop.OrderService
                     service.AddUragano(context.Configuration, builder =>
                     {
                         builder.AddServer();
+                        builder.AddClient();
                         builder.AddExceptionlessLogger();
                         builder.AddConsul();
                     });

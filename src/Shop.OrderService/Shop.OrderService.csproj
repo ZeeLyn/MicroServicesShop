@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shop.IGoods\Shop.IGoods.csproj" />
     <ProjectReference Include="..\Shop.IOrder\Shop.IOrder.csproj" />
   </ItemGroup>
 

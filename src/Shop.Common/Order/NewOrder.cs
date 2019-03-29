@@ -59,6 +59,35 @@ namespace Shop.Common.Order
         ///// </summary>
         //public List<GoodsInfo> GoodsInfos { get; set; }
     }
+
+    public class OrderLstResult
+    {
+        /// <summary>
+        /// order uid
+        /// </summary>
+        public string OrderCode { get; set; }
+        /// <summary>
+        /// order status
+        /// </summary>
+        public OrderStatus OrderStatus { get; set; }
+        
+        /// <summary>
+        /// order submitted time
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
+        /// <summary>
+        /// goods list
+        /// </summary>
+        public List<GoodsInfoObj> GoodsInfos { get; set; }
+    }
+
+    public class OrderItemResult: OrderLstResult
+    {
+        /// <summary>
+        /// pay status
+        /// </summary>
+        public PayStatus PayStatus { get; set; }
+    }
     
     public class NewOrderResult
     {
@@ -112,11 +141,6 @@ namespace Shop.Common.Order
         /// goods unit-price
         /// </summary>
         public decimal Price { get; set; }
-
-        /// <summary>
-        /// goods lump-sum price
-        /// </summary>
-        public decimal Amount { get; set; }
     }
 
     public class GoodsInfo
@@ -134,6 +158,12 @@ namespace Shop.Common.Order
         /// goods unit-price
         /// </summary>
         public decimal Price { get; set; }
+    }
+
+    public class GoodsInfoObj: GoodsInfo
+    {
+        public string Pic { get; set; }
+        public string Title { get; set; }
     }
 
     /// <summary>

@@ -47,6 +47,18 @@
           "Port": 80
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/order/{everything}",
+      "DownstreamPathTemplate": "/api/order/{everything}",
+      "UpstreamHttpMethod": [ "get" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shop.gateway.order",
+          "Port": 80
+        }
+      ]
     }
   ],
   "GlobalConfiguration": {
