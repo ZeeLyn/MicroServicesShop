@@ -75,6 +75,7 @@ namespace Shop.Common.Order
         /// order submitted time
         /// </summary>
         public DateTime CreatedOn { get; set; }
+        public decimal Amount { get; set; }
         /// <summary>
         /// goods list
         /// </summary>

@@ -164,25 +164,26 @@ namespace Shop.OrderService
         /// </summary>
         /// <param name="userId">user id</param>
         /// <returns></returns>
-        public async Task<List<OrderLstResult>> GetAllOrder(int userId)
+        public async Task<List<OrderItemResult>> GetAllOrder(int userId)
         {
-            var lstOrder = await Dapper.QueryAsync<OrderLstResult>(
-                "select OrderCode,OrderStatus,CreatedOn from `Order` where UserId=@userId order by CreatedOn desc",
+            var lstOrder = await Dapper.QueryAsync<OrderItemResult>(
+                "select OrderCode,OrderStatus,PayStatus,CreatedOn from `Order` where UserId=@userId order by CreatedOn desc",
                 new {userId});
             var lstCode = lstOrder.Select(i => i.OrderCode).ToList();
             var lstOrderDetail = await Dapper.QueryAsync<NewOrderDetail>(
                 "select OrderCode,GoodsId,Count,Price from OrderDetail where OrderCode in @lstCode", new {lstCode});
             var lstGoodsId = lstOrderDetail.Select(i => i.GoodsId).ToList();
             var lstGoods = await GoodsService.GoodsInfos(lstGoodsId);
-            var result = new List<OrderLstResult>();
+            var result = new List<OrderItemResult>();
             lstOrder.ForEach(i =>
             {
-                var order = new OrderLstResult
+                var order = new OrderItemResult
                 {
                     CreatedOn = i.CreatedOn,
                     OrderCode = i.OrderCode,
                     OrderStatus = i.OrderStatus,
-                    GoodsInfos = new List<GoodsInfoObj>()
+                    PayStatus = i.PayStatus,
+                    GoodsInfos = new List<GoodsInfoObj>(),
                 };
                 var lstDetail = lstOrderDetail.Where(j => j.OrderCode == i.OrderCode).ToList();
                 lstDetail.ForEach(j =>
@@ -197,6 +198,7 @@ namespace Shop.OrderService
                         Title = srcGoods?.Title
                     });
                 });
+                order.Amount = order.GoodsInfos.Sum(k => k.Count * k.Price);
                 result.Add(order);
             });
             return result;
@@ -207,7 +209,8 @@ namespace Shop.OrderService
         /// </summary>
         /// <param name="orderCode">order id</param>
         /// <returns></returns>
-        public async Task<(bool Succeed, OrderItemResult Order, string ErrorMessage)> GetOrder(int userId, string orderCode)
+        public async Task<(bool Succeed, OrderItemResult Order, string ErrorMessage)> GetOrder(int userId,
+            string orderCode)
         {
             var order = await Dapper.QueryFirstOrDefaultAsync<OrderItemResult>(
                 "select OrderCode,OrderStatus,PayStatus,CreatedOn from `Order` where OrderCode=@orderCode and UserId=@userId",
@@ -230,6 +233,7 @@ namespace Shop.OrderService
                     Title = srcGoods?.Title
                 });
             });
+            order.Amount = order.GoodsInfos.Sum(k => k.Count * k.Price);
             return (true, order, "");
         }
     }
