@@ -51,26 +51,7 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
     
-  shop.identity.service:
-    image: ${DOCKER_REGISTRY-}shopidentityservice
-    container_name: Shop.Igentity.Service
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - TZ=Asia/Shanghai
-    build:
-      context: .
-      dockerfile: src/Shop.IdentityService/Dockerfile
-    depends_on:
-      - consul
-      - mysql
-    links:
-      - consul
-      - mysql
-    ports:
-      - 5003:5003
-
-
+  
   shop.goods.service:
     image: ${DOCKER_REGISTRY-}shopgoodsservice
     container_name: Shop.Goods.Service
@@ -89,7 +70,25 @@ services:
     links:
       - consul
       - mysql
-  
+
+  shop.identity.service:
+    image: ${DOCKER_REGISTRY-}shopidentityservice
+    container_name: Shop.Igentity.Service
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - TZ=Asia/Shanghai
+    build:
+      context: .
+      dockerfile: src/Shop.IdentityService/Dockerfile
+    depends_on:
+      - consul
+      - mysql
+    links:
+      - consul
+      - mysql
+    ports:
+      - 5003:5003
 
   shop.basket.service:
     image: ${DOCKER_REGISTRY-}shopbasketservice
@@ -113,8 +112,27 @@ services:
       - redis
       - rabbitmq
       - mysql
-      
 
+  shop.order.service:
+    image: ${DOCKER_REGISTRY-}shoporderservice
+    container_name: shop.order.service
+    build:
+      context: .
+      dockerfile: src/Shop.OrderService/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - TZ=Asia/Shanghai
+    ports:
+      - 5005:5005
+    depends_on:
+      - consul
+      - rabbitmq
+      - mysql
+    links:
+      - consul
+      - rabbitmq
+      - mysql
       
   shop.gateway.web:
     image: ${DOCKER_REGISTRY-}shopgatewayweb
@@ -191,27 +209,6 @@ services:
       - consul
     links:
       - consul
-
-  shop.order.service:
-    image: ${DOCKER_REGISTRY-}shoporderservice
-    container_name: shop.order.service
-    build:
-      context: .
-      dockerfile: src/Shop.OrderService/Dockerfile
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - TZ=Asia/Shanghai
-    ports:
-      - 5005:5005
-    depends_on:
-      - consul
-      - rabbitmq
-      - mysql
-    links:
-      - consul
-      - rabbitmq
-      - mysql
 
 
   shop.gateway.order:
