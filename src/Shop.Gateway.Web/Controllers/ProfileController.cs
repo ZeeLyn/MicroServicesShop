@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Shop.Gateway.Web.Controllers
 {
+    [Route("profile")]
     public class ProfileController : Controller
     {
         public IActionResult Index()
@@ -13,9 +14,16 @@ namespace Shop.Gateway.Web.Controllers
             return View();
         }
 
+        [Route("order")]
         public IActionResult Order()
         {
             return View();
+        }
+
+        [Route("order/detail/{orderCode}")]
+        public IActionResult Detail(string orderCode)
+        {
+            return View("detail", orderCode);
         }
     }
 }

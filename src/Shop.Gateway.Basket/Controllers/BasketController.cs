@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -41,9 +42,16 @@ namespace Shop.Gateway.Basket.Controllers
         [HttpGet("detail")]
         public async Task<IActionResult> List()
         {
-            if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
-                return Unauthorized();
-            return Ok(await BasketService.Get(userid));
+            try
+            {
+                if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userid))
+                    return Unauthorized();
+                return Ok(await BasketService.Get(userid));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("remove/{id:int}")]

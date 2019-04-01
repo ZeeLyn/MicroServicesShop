@@ -3,9 +3,9 @@
     ViewData["Title"] = "Order";
 }
 
-<h1>My order</h1>
+<h1>My orders</h1>
 
-<div id="app">
+<template id="app">
     <ul class="orders">
         <li v-for="(item,index) in list" class="img-thumbnail">
             <div class="header">
@@ -26,14 +26,13 @@
                 <span v-if="item.payStatus==1">Status: Paid</span>
                 <span v-else>Status: Unpaid</span>
             </div>
-            <div>
-                <a v-if="item.payStatus==0" href="#">Pay now!</a>
-                <a v-if="item.payStatus==0" href="javascript:;" v-on:click="del(index,item)">Cancel</a>
+            <div class="action">
+                <a v-if="item.payStatus==0" href="javascript:;" v-on:click="del(index,item)" class="btn btn-secondary btn-sm">Cancel</a>
+                <a v-if="item.payStatus==0" :href="['/profile/order/detail/'+item.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
             </div>
-
         </li>
     </ul>
-</div>
+</template>
 
 @section Scripts{
     <script>
@@ -79,5 +78,8 @@
         .goods label { display: flex; flex-direction: column; margin: 10px; align-items: center; width: 120px; }
         .goods label img { width: 100px; height: 100px; }
         .orders .info { text-align: right; }
+        .orders .info span { margin-left: 15px; }
+        .action { text-align: right; margin: 10px 0; }
+        .action a { margin-left: 10px; }
     </style>
 }
