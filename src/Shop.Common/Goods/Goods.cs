@@ -12,13 +12,12 @@ namespace Shop.Common
 
         public decimal Price { get; set; }
 
+        public int Stock { get; set; }
     }
 
     public class Goods : GoodsList
     {
         public int CategoryId { get; set; }
-
-        public int Stock { get; set; }
 
         public string Description { get; set; }
 

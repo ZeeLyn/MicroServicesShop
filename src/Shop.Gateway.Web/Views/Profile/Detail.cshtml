@@ -1,13 +1,14 @@
 ﻿
 @{
-    ViewData["Title"] = "Detail";
+    ViewData["Title"] = "Order detail";
 }
 @model string
 <h1>Order detail</h1>
 
 <template id="app">
-    <div>
+    <div class="img-thumbnail">
         <h4>Order code:{{detail.orderCode}}</h4>
+
         <ul class="goods">
             <li v-for="item in detail.goodsInfos">
                 <img :src="item.pic" />
@@ -18,6 +19,10 @@
                 </div>
             </li>
         </ul>
+        <div class="info">
+            <div>Total amount:${{detail.amount}}</div>
+            <div>Created time:{{detail.createdOn}}</div>
+        </div>
         <div class="action">
             <a v-if="detail.payStatus==0" href="javascript:;" v-on:click="del(index,item)" class="btn btn-secondary btn-sm">Cancel</a>
             <a v-if="detail.payStatus==0" :href="['/profile/order/detail/'+detail.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
@@ -81,5 +86,6 @@
         .goods li div { display: flex; justify-content: space-between; }
         .action { text-align: right; margin: 10px 0; }
         .action a { margin-left: 10px; }
+        .info { display: flex; justify-content: space-between; }
     </style>
 }

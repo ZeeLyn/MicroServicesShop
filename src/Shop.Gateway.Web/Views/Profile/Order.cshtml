@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Order";
+    ViewData["Title"] = "My orders";
 }
 
 <h1>My orders</h1>
@@ -29,6 +29,7 @@
             <div class="action">
                 <a v-if="item.payStatus==0" href="javascript:;" v-on:click="del(index,item)" class="btn btn-secondary btn-sm">Cancel</a>
                 <a v-if="item.payStatus==0" :href="['/profile/order/detail/'+item.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
+                <a :href="['/profile/order/detail/'+item.orderCode]" class="btn btn-secondary btn-info btn-sm">Detail</a>
             </div>
         </li>
     </ul>
