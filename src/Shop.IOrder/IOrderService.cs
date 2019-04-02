@@ -26,7 +26,7 @@ namespace Shop.IOrder
         /// <param name="status">order status</param>
         /// <returns></returns>
         [ServiceRoute("updateStatus")]
-        Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status);
+        Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status, string result = "");
 
         /// <summary>
         /// get all order

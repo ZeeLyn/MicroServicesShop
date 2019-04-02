@@ -36,7 +36,23 @@ namespace Shop.GoodsService
                     });
 
                     service.AddScoped<IDapper, MySqlDapper>();
-                    service.AddHostedService<InitDataService>();
+                    //service.AddHostedService<InitDataService>();
+                    //DI service put before AddCap.
+                    service.AddTransient<IGoodsSubscribeService, GoodsSubscriberService>();
+                    var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");
+                    var rabbitUser = context.Configuration.GetValue<string>("RabbitMQ:UserName");
+                    var rabbitPassword = context.Configuration.GetValue<string>("RabbitMQ:Password");
+                    var capConn = context.Configuration.GetConnectionString("DefaultConnection");
+                    service.AddCap(builder =>
+                    {
+                        builder.UseMySql(opt => { opt.ConnectionString = capConn; });
+                        builder.UseRabbitMQ(r =>
+                        {
+                            r.HostName = rabbitHost;
+                            r.UserName = rabbitUser;
+                            r.Password = rabbitPassword;
+                        });
+                    });
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

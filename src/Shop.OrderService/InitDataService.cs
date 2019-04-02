@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `PayStatus` tinyint(4) DEFAULT NULL,
   `OrderStatus` tinyint(4) DEFAULT NULL,
   `CreatedOn` datetime DEFAULT NULL,
-  `CompletedTime` datetime DEFAULT NULL
+  `CompletedTime` datetime DEFAULT NULL,
+  `Result` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `OrderDetail` (
   `OrderCode` varchar(255) DEFAULT NULL,

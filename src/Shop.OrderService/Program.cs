@@ -10,6 +10,8 @@ using Dapper.Extensions.MySql;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Net.Mail;
 
 namespace Shop.OrderService
 {
@@ -46,10 +48,7 @@ namespace Shop.OrderService
                     service.AddTransient<ISubscriberService, OrderSubscriberService>();
                     service.AddCap(builder =>
                     {
-                        builder.UseMySql(opt =>
-                        {
-                            opt.ConnectionString = capConn;
-                        });
+                        builder.UseMySql(opt => { opt.ConnectionString = capConn; });
                         builder.UseRabbitMQ(r =>
                         {
                             r.HostName = rabbitHost;
@@ -57,7 +56,13 @@ namespace Shop.OrderService
                             r.Password = rabbitPassword;
                         });
                     });
-
+                    //Email
+                    service.AddFluentEmail("zhangyake@dmtmax.com").AddSmtpSender(new SmtpClient
+                    {
+                        Host = "smtp.dmtmax.com",
+                        Port = 25,
+                        Credentials = new NetworkCredential("zhangyake@dmtmax.com", "zhangyake123456")
+                    });
                 }).ConfigureLogging((context, builder) =>
                 {
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));

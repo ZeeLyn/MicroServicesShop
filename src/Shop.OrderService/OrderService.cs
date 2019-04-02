@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Extensions;
+using DotNetCore.CAP;
+using FluentEmail.Core;
 using Microsoft.Extensions.Logging;
 using Shop.Common;
 using Shop.Common.Order;
 using Shop.IGoods;
+using Shop.IIdentity;
 using Shop.IOrder;
 
 namespace Shop.OrderService
@@ -14,17 +17,23 @@ namespace Shop.OrderService
     /// <summary>
     /// order service implementation
     /// </summary>
-    public class OrderService : IOrderService
+    public class OrderService : IOrderService, ICapSubscribe
     {
         private IDapper Dapper { get; }
         private ILogger Logger { get; }
         private IGoodsService GoodsService { get; }
-
-        public OrderService(IDapper dapper, ILogger<OrderSubscriberService> logger, IGoodsService goodsService)
+        private ICapPublisher CapBus { get; }
+        private IFluentEmail Email { get; }
+        private IIdentityService IdentityService { get; }
+        public OrderService(IDapper dapper, ILogger<OrderService> logger, IGoodsService goodsService,
+            ICapPublisher capBus,IFluentEmail email, IIdentityService identityService)
         {
             Dapper = dapper;
             Logger = logger;
             GoodsService = goodsService;
+            CapBus = capBus;
+            Email = email;
+            IdentityService = identityService;
         }
 
         /// <summary>
@@ -57,7 +66,17 @@ namespace Shop.OrderService
                         CreatedOn = strDateNow,
                         CompletedTime = new DateTime(1999, 1, 1, 0, 0, 0)
                     });
-
+                //publish message to goods service.
+                await CapBus.PublishAsync("route.order.submmit", new OrderPublish
+                {
+                    UserId = order.UserId,
+                    OrderCode = orderCode,
+                    GoodsInfos = order.GoodsInfos.Select(i => new GoodsInfoBase {Count = i.Count, GoodsId = i.GoodsId})
+                        .ToList()
+                }, "callback-stock-update");
+                //publish message to send email.
+                await CapBus.PublishAsync("route.order.email",
+                    new OrderUser { OrderCode = orderCode, UserId = order.UserId, OrderStatus = OrderStatus.Submmit });
                 Dapper.CommitTransaction();
                 return new ResponseResult<NewOrderResult>
                 {
@@ -80,18 +99,46 @@ namespace Shop.OrderService
             }
         }
 
+        [CapSubscribe("callback-stock-update")] //correspond the callbackName of publisher
+        public async Task AcceptUpdateStockResult(ResponseResult<OrderPublish> result)
+        {
+            Dapper.BeginTransaction();
+            try
+            {
+                if (!result.Success)
+                {
+                    await UpdateOrderStatus(result.Result.OrderCode, OrderStatus.Failed, result.Error);
+                    //send email
+                    await CapBus.PublishAsync("route.order.email",
+                        new OrderUser
+                        {
+                            OrderCode = result.Result.OrderCode,
+                            UserId = result.Result.UserId,
+                            OrderStatus = OrderStatus.Failed
+                        });
+                    Dapper.CommitTransaction();
+                }
+            }
+            catch (Exception e)
+            {
+                //log e.message
+                Logger.LogError(e, "accepting update stock result has error");
+                Dapper.RollbackTransaction();
+            }
+        }
+
         /// <summary>
         /// update order status
         /// </summary>
         /// <param name="orderCode">order uid</param>
         /// <param name="status">order status</param>
         /// <returns></returns>
-        public async Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status)
+        public async Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status, string orderResult = "")
         {
             try
             {
                 var order = await Dapper.QueryFirstOrDefaultAsync<NewOrderBase>(
-                    "select OrderCode,OrderStatus,PayStatus from Order where OrderCode=@orderCode", new {orderCode});
+                    "select OrderCode,OrderStatus,PayStatus from `Order` where OrderCode=@orderCode", new {orderCode});
                 if (order.OrderStatus == status)
                 {
                     //log
@@ -105,6 +152,15 @@ namespace Shop.OrderService
                     Logger.LogError($"order code is ：{orderCode},deleted order cann't be handle.");
                     return false;
                 }
+                if (order.OrderStatus == OrderStatus.Failed) //failed order can only be delete
+                {
+                    if (status != OrderStatus.Delete)
+                    {
+                        //log
+                        Logger.LogError($"order code is ：{orderCode},failed order can only be delete.");
+                        return false;
+                    }
+                }
 
                 if (order.OrderStatus == OrderStatus.Cancel) //cancelled order can only be delete
                 {
@@ -116,12 +172,12 @@ namespace Shop.OrderService
                     }
                 }
 
-                if (order.OrderStatus == OrderStatus.Submmit) //submmitted order can only be cancelled
+                if (order.OrderStatus == OrderStatus.Submmit) //submmitted order can be cancelled or failed.
                 {
-                    if (status != OrderStatus.Cancel)
+                    if (status != OrderStatus.Cancel && status != OrderStatus.Failed)
                     {
                         //log
-                        Logger.LogError($"order code is ：{orderCode},submmitted order can only be cancelled.");
+                        Logger.LogError($"order code is ：{orderCode},submmitted order can only be cancelled or failed.");
                         return false;
                     }
                 }
@@ -136,13 +192,11 @@ namespace Shop.OrderService
                     }
                 }
 
-                Dapper.BeginTransaction();
                 var result = await Dapper.ExecuteAsync(
-                    "update Order set OrderStatus=@status where OrderCode=@orderCode",
-                    new {orderCode});
+                    "update `Order` set OrderStatus=@status,Result=@orderResult where OrderCode=@orderCode",
+                    new {status, orderResult, orderCode});
                 if (result == 1)
                 {
-                    Dapper.CommitTransaction();
                     return true;
                 }
                 else

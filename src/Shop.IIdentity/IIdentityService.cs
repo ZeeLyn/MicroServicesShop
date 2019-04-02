@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Shop.Common;
 using Shop.Common.Identity;
 using Uragano.Abstractions;
 
@@ -13,5 +14,8 @@ namespace Shop.IIdentity
 
         [ServiceRoute("login")]
         Task<(bool Succeed, string ErrorMessage, AuthResult Result)> Login(LoginView login);
+
+        [ServiceRoute("info")]
+        Task<ResponseResult<UserBase>> UserInfo(int userId);
     }
 }

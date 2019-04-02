@@ -38,4 +38,10 @@ namespace Shop.Common.Identity
 
 
     }
+
+    public class UserBase
+    {
+        public string Email { get; set; }
+        public string NickName { get; set; }
+    }
 }

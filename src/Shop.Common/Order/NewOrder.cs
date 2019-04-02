@@ -144,7 +144,16 @@ namespace Shop.Common.Order
         public decimal Price { get; set; }
     }
 
-    public class GoodsInfo
+    public class GoodsInfo: GoodsInfoBase
+    {
+
+        /// <summary>
+        /// goods unit-price
+        /// </summary>
+        public decimal Price { get; set; }
+    }
+
+    public class GoodsInfoBase
     {
         /// <summary>
         /// goods uid
@@ -154,11 +163,6 @@ namespace Shop.Common.Order
         /// goods count
         /// </summary>
         public int Count { get; set; }
-
-        /// <summary>
-        /// goods unit-price
-        /// </summary>
-        public decimal Price { get; set; }
     }
 
     public class GoodsInfoObj: GoodsInfo
@@ -167,15 +171,41 @@ namespace Shop.Common.Order
         public string Title { get; set; }
     }
 
+    public class OrderPublish
+    {
+        public int UserId { get; set; }
+        /// <summary>
+        /// order uid
+        /// </summary>
+        public string OrderCode { get; set; }
+        public string Email { get; set; }
+        public string NickName { get; set; }
+        /// <summary>
+        /// goods info list
+        /// </summary>
+        public List<GoodsInfoBase> GoodsInfos { get; set; }
+    }
+
+    public class OrderUser
+    {
+        /// <summary>
+        /// order uid
+        /// </summary>
+        public string OrderCode { get; set; }
+        public int UserId { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+    }
+
     /// <summary>
     /// order status enum
     /// </summary>
     public enum OrderStatus
     {
-        Delete = -1,
-        Cancel,
-        Submmit,
-        Complete
+        Delete = -2,
+        Failed = -1,
+        Cancel = 0,
+        Submmit = 1,
+        Complete = 2
     }
 
     /// <summary>
