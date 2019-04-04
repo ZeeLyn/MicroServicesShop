@@ -80,6 +80,7 @@ namespace Shop.Common.Order
         /// goods list
         /// </summary>
         public List<GoodsInfoObj> GoodsInfos { get; set; }
+        public string Result { get; set; }
     }
 
     public class OrderItemResult: OrderLstResult

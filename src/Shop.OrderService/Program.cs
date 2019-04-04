@@ -57,11 +57,16 @@ namespace Shop.OrderService
                         });
                     });
                     //Email
-                    service.AddFluentEmail("zhangyake@dmtmax.com").AddSmtpSender(new SmtpClient
+                    var defaultFromEmail = context.Configuration.GetValue<string>("Email:DefaultFromEmail");
+                    var emailHost = context.Configuration.GetValue<string>("Email:Host");
+                    var emailPort = context.Configuration.GetValue<int>("Email:Port");
+                    var emailUserName = context.Configuration.GetValue<string>("Email:UserName");
+                    var emailPassword = context.Configuration.GetValue<string>("Email:Password");
+                    service.AddFluentEmail(defaultFromEmail).AddSmtpSender(new SmtpClient
                     {
-                        Host = "smtp.dmtmax.com",
-                        Port = 25,
-                        Credentials = new NetworkCredential("zhangyake@dmtmax.com", "zhangyake123456")
+                        Host = emailHost,
+                        Port = emailPort,
+                        Credentials = new NetworkCredential(emailUserName, emailPassword)
                     });
                 }).ConfigureLogging((context, builder) =>
                 {

@@ -107,16 +107,20 @@ namespace Shop.OrderService
             {
                 if (!result.Success)
                 {
-                    await UpdateOrderStatus(result.Result.OrderCode, OrderStatus.Failed, result.Error);
-                    //send email
-                    await CapBus.PublishAsync("route.order.email",
-                        new OrderUser
-                        {
-                            OrderCode = result.Result.OrderCode,
-                            UserId = result.Result.UserId,
-                            OrderStatus = OrderStatus.Failed
-                        });
-                    Dapper.CommitTransaction();
+                    var updateResult =
+                        await UpdateOrderStatus(result.Result.OrderCode, OrderStatus.Failed, result.Error);
+                    if (updateResult.Result)
+                    {
+                        //send email
+                        await CapBus.PublishAsync("route.order.email",
+                            new OrderUser
+                            {
+                                OrderCode = result.Result.OrderCode,
+                                UserId = result.Result.UserId,
+                                OrderStatus = OrderStatus.Failed
+                            });
+                        Dapper.CommitTransaction();
+                    }
                 }
             }
             catch (Exception e)
@@ -133,7 +137,7 @@ namespace Shop.OrderService
         /// <param name="orderCode">order uid</param>
         /// <param name="status">order status</param>
         /// <returns></returns>
-        public async Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status, string orderResult = "")
+        public async Task<ResponseResult<bool>> UpdateOrderStatus(string orderCode, OrderStatus status, string orderResult = "")
         {
             try
             {
@@ -143,32 +147,52 @@ namespace Shop.OrderService
                 {
                     //log
                     Logger.LogError($"order code is ：{orderCode},updated status is the same to the old status.");
-                    return false;
+                    return new ResponseResult<bool>
+                    {
+                        Result = false,
+                        Error = $"operation not permitted.",
+                        Success = false
+                    };
                 }
 
                 if (order.OrderStatus == OrderStatus.Delete) //deleted order cann't be handle
                 {
                     //log
-                    Logger.LogError($"order code is ：{orderCode},deleted order cann't be handle.");
-                    return false;
+                    Logger.LogError($"order code is ：{orderCode},deleted order cann't be handled.");
+                    return new ResponseResult<bool>
+                    {
+                        Result = false,
+                        Error = $"operation not permitted.",
+                        Success = false
+                    };
                 }
                 if (order.OrderStatus == OrderStatus.Failed) //failed order can only be delete
                 {
                     if (status != OrderStatus.Delete)
                     {
                         //log
-                        Logger.LogError($"order code is ：{orderCode},failed order can only be delete.");
-                        return false;
+                        Logger.LogError($"order code is ：{orderCode},failed order can only be deleted.");
+                        return new ResponseResult<bool>
+                        {
+                            Result = false,
+                            Error = $"operation not permitted.",
+                            Success = false
+                        };
                     }
                 }
 
-                if (order.OrderStatus == OrderStatus.Cancel) //cancelled order can only be delete
+                if (order.OrderStatus == OrderStatus.Cancel) //cancelled order can only be deleted
                 {
                     if (status != OrderStatus.Delete)
                     {
                         //log
-                        Logger.LogError($"order code is ：{orderCode},cancelled order can only be delete.");
-                        return false;
+                        Logger.LogError($"order code is ：{orderCode},cancelled order can only be deleted.");
+                        return new ResponseResult<bool>
+                        {
+                            Result = false,
+                            Error = $"operation not permitted.",
+                            Success = false
+                        };
                     }
                 }
 
@@ -178,7 +202,12 @@ namespace Shop.OrderService
                     {
                         //log
                         Logger.LogError($"order code is ：{orderCode},submmitted order can only be cancelled or failed.");
-                        return false;
+                        return new ResponseResult<bool>
+                        {
+                            Result = false,
+                            Error = $"operation not permitted.",
+                            Success = false
+                        };
                     }
                 }
 
@@ -188,7 +217,12 @@ namespace Shop.OrderService
                     {
                         //log
                         Logger.LogError($"order code is ：{orderCode},completed order can only be deleted.");
-                        return false;
+                        return new ResponseResult<bool>
+                        {
+                            Result = false,
+                            Error = $"operation not permitted.",
+                            Success = false
+                        };
                     }
                 }
 
@@ -197,19 +231,34 @@ namespace Shop.OrderService
                     new {status, orderResult, orderCode});
                 if (result == 1)
                 {
-                    return true;
+                    return new ResponseResult<bool>
+                    {
+                        Result = true,
+                        Error = "",
+                        Success = true
+                    };
                 }
                 else
                 {
                     //log
                     Logger.LogError($"order code is ：{orderCode},order status was not changed.");
-                    return false;
+                    return new ResponseResult<bool>
+                    {
+                        Result = false,
+                        Error = $"operation failed.",
+                        Success = false
+                    };
                 }
             }
             catch (Exception e)
             {
                 Logger.LogError(e, $"order code is ：{orderCode},order status changed has error.");
-                return false;
+                return new ResponseResult<bool>
+                {
+                    Result = false,
+                    Error = $"operation has error.",
+                    Success = false
+                };
             }
         }
 
@@ -221,7 +270,7 @@ namespace Shop.OrderService
         public async Task<List<OrderItemResult>> GetAllOrder(int userId)
         {
             var lstOrder = await Dapper.QueryAsync<OrderItemResult>(
-                "select OrderCode,OrderStatus,PayStatus,CreatedOn from `Order` where UserId=@userId order by CreatedOn desc",
+                "select OrderCode,OrderStatus,PayStatus,CreatedOn,Result from `Order` where UserId=@userId order by CreatedOn desc",
                 new {userId});
             var lstCode = lstOrder.Select(i => i.OrderCode).ToList();
             var lstOrderDetail = await Dapper.QueryAsync<NewOrderDetail>(
@@ -237,6 +286,7 @@ namespace Shop.OrderService
                     OrderCode = i.OrderCode,
                     OrderStatus = i.OrderStatus,
                     PayStatus = i.PayStatus,
+                    Result = i.Result,
                     GoodsInfos = new List<GoodsInfoObj>(),
                 };
                 var lstDetail = lstOrderDetail.Where(j => j.OrderCode == i.OrderCode).ToList();
@@ -267,7 +317,7 @@ namespace Shop.OrderService
             string orderCode)
         {
             var order = await Dapper.QueryFirstOrDefaultAsync<OrderItemResult>(
-                "select OrderCode,OrderStatus,PayStatus,CreatedOn from `Order` where OrderCode=@orderCode and UserId=@userId",
+                "select OrderCode,OrderStatus,PayStatus,CreatedOn,Result from `Order` where OrderCode=@orderCode and UserId=@userId",
                 new {orderCode, userId});
             if (order == null) return (false, null, "order not exists");
             var lstDetail = await Dapper.QueryAsync<NewOrderDetail>(
@@ -289,6 +339,47 @@ namespace Shop.OrderService
             });
             order.Amount = order.GoodsInfos.Sum(k => k.Count * k.Price);
             return (true, order, "");
+        }
+
+        /// <summary>
+        /// cancel order.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        public async Task<ResponseResult<bool>> CancelOrder(int userId, string orderCode)
+        {
+            Dapper.BeginTransaction();
+            try
+            {
+                var updateResult = await UpdateOrderStatus(orderCode, OrderStatus.Cancel, "cancel order.");
+                if (updateResult.Result)
+                {
+                    //send email
+                    await CapBus.PublishAsync("route.order.email",
+                        new OrderUser
+                        {
+                            OrderCode = orderCode,
+                            UserId = userId,
+                            OrderStatus = OrderStatus.Cancel
+                        });
+                    Dapper.CommitTransaction();
+                }
+
+                return updateResult;
+            }
+            catch (Exception e)
+            {
+                //log e.message
+                Logger.LogError(e, "cancel order has error");
+                Dapper.RollbackTransaction();
+                return new ResponseResult<bool>
+                {
+                    Error = "cancel order failed.",
+                    Success = false,
+                    Result = false
+                };
+            }
         }
     }
 }

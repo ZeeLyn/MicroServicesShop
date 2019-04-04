@@ -26,7 +26,7 @@ namespace Shop.IOrder
         /// <param name="status">order status</param>
         /// <returns></returns>
         [ServiceRoute("updateStatus")]
-        Task<bool> UpdateOrderStatus(string orderCode, OrderStatus status, string result = "");
+        Task<ResponseResult<bool>> UpdateOrderStatus(string orderCode, OrderStatus status, string result = "");
 
         /// <summary>
         /// get all order
@@ -43,5 +43,14 @@ namespace Shop.IOrder
         /// <returns></returns>
         [ServiceRoute("detail")]
         Task<(bool Succeed, OrderItemResult Order, string ErrorMessage)> GetOrder(int userId, string orderCode);
+
+        /// <summary>
+        /// cancel order
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="orderCode">order uid</param>
+        /// <returns></returns>
+        [ServiceRoute("cancelOrder")]
+        Task<ResponseResult<bool>> CancelOrder(int userId,string orderCode);
     }
 }

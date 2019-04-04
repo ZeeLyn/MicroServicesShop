@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JWT.Extension;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Common.Order;
 using Shop.IOrder;
 
 namespace Shop.Gateway.Order.Controllers
@@ -47,6 +48,25 @@ namespace Shop.Gateway.Order.Controllers
             if (result.Succeed)
                 return Ok(result.Order);
             return BadRequest(result.ErrorMessage);
+        }
+
+        /// <summary>
+        /// cancel order.
+        /// </summary>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        [HttpGet("cancel/{orderCode}")]
+        public async Task<IActionResult> Cancel(string orderCode)
+        {
+            if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userId))
+                return Unauthorized();
+            var order = await OrderService.GetOrder(userId, orderCode);
+            if (!order.Succeed)
+                return BadRequest(order.ErrorMessage);
+            var result = await OrderService.CancelOrder(userId, orderCode);
+            if (!result.Result)
+                return Ok(result.Error);
+            return Ok(result.Result);
         }
     }
 }
