@@ -73,7 +73,7 @@ services:
 
   shop.identity.service:
     image: ${DOCKER_REGISTRY-}shopidentityservice
-    container_name: Shop.Igentity.Service
+    container_name: Shop.Identity.Service
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
