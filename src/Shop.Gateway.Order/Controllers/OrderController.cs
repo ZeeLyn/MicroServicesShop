@@ -55,7 +55,7 @@ namespace Shop.Gateway.Order.Controllers
         /// </summary>
         /// <param name="orderCode"></param>
         /// <returns></returns>
-        [HttpGet("cancel/{orderCode}")]
+        [HttpPut("cancel/{orderCode}")]
         public async Task<IActionResult> Cancel(string orderCode)
         {
             if (!int.TryParse(User.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Sid)?.Value, out var userId))

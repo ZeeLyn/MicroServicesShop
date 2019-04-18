@@ -29,22 +29,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSRedisCore" Version="3.0.47" />
+    <PackageReference Include="CSRedisCore" Version="3.0.51" />
     <PackageReference Include="Dapper.Extensions.MySql" Version="1.2.1" />
     <PackageReference Include="DotNetCore.CAP" Version="2.5.0" />
     <PackageReference Include="DotNetCore.CAP.MySql" Version="2.5.0" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.5.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.400" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.400" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.400" />
-    <PackageReference Include="Uragano.Remoting" Version="0.0.1-preview.400" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.407" />
+    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.407" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.407" />
+    <PackageReference Include="Uragano.Remoting" Version="0.0.1-preview.407" />
   </ItemGroup>
 
   <ItemGroup>
