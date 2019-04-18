@@ -36,7 +36,7 @@ namespace Shop.GoodsService
                     });
 
                     service.AddScoped<IDapper, MySqlDapper>();
-                    //service.AddHostedService<InitDataService>();
+                    service.AddHostedService<InitDataService>();
                     //DI service put before AddCap.
                     service.AddTransient<IGoodsSubscribeService, GoodsSubscriberService>();
                     var rabbitHost = context.Configuration.GetValue<string>("RabbitMQ:Host");

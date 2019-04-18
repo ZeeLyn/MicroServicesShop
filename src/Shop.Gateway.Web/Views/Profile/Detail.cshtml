@@ -1,45 +1,45 @@
-﻿
-@{
-    ViewData["Title"] = "Order detail";
-}
-@model string
-<h1>Order detail</h1>
+﻿<div>
+    @{
+        ViewData["Title"] = "Order detail";
+    }
+    @model string
+    <h1>Order detail</h1>
 
-<template id="app">
-    <div class="img-thumbnail">
-        <h4>Order code:{{detail.orderCode}}</h4>
+    <template id="app">
+        <div class="img-thumbnail">
+            <h4>Order code:{{detail.orderCode}}</h4>
 
-        <ul class="goods">
-            <li v-for="item in detail.goodsInfos">
-                <img :src="item.pic" />
-                <h5>{{item.title}}</h5>
-                <div>
-                    <span>Quantity：{{item.count}}</span>
-                    <span>Price：${{item.price}}</span>
-                </div>
-            </li>
-        </ul>
-        <div class="info">
-            <div>Total amount:${{detail.amount}}</div>
-            <div>Created time:{{detail.createdOn}}</div>
+            <ul class="goods">
+                <li v-for="item in detail.goodsInfos">
+                    <img :src="item.pic" />
+                    <h5>{{item.title}}</h5>
+                    <div>
+                        <span>Quantity：{{item.count}}</span>
+                        <span>Price：${{item.price}}</span>
+                    </div>
+                </li>
+            </ul>
+            <div class="info">
+                <div>Total amount:${{detail.amount}}</div>
+                <div>Created time:{{detail.createdOn}}</div>
+            </div>
+            <div class="action">
+                <a v-if="detail.payStatus==0&&detail.orderStatus==1" href="javascript:;" v-on:click="cancel()" class="btn btn-secondary btn-sm">Cancel</a>
+                <a v-if="detail.payStatus==0" :href="['/profile/order/detail/'+detail.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
+            </div>
         </div>
-        <div class="action">
-            <a v-if="detail.payStatus==0" href="javascript:;" v-on:click="del(index,item)" class="btn btn-secondary btn-sm">Cancel</a>
-            <a v-if="detail.payStatus==0" :href="['/profile/order/detail/'+detail.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
-        </div>
-    </div>
-</template>
-@section Scripts{
-    <script>
+    </template>
+    @section Scripts{
+        <script>
         var app = new Vue({
             el: "#app",
             data: {
-                detail: [{ id: 1, title: "abc" }],
+                detail: {},
                 category: [],
                 currentCategory: 0,
                 goods: []
             },
-            mounted: function () {
+            mounted: function() {
                 var self = this;
                 axios.get("http://localhost:9001/api/order/detail/@Model",
                         {
@@ -47,7 +47,7 @@
                                 Authorization: "Bearer " + localStorage.getItem("access_token")
                             }
                         })
-                    .then(function (res) {
+                    .then(function(res) {
                         self.detail = res.data;
                     })
                     .catch(function(err) {
@@ -61,31 +61,41 @@
                     });
             },
             methods: {
-                loadGoods: function () {
+
+                cancel: function () {
                     var self = this;
-                    axios.get("http://localhost:9001/api/goods/lst/" + self.currentCategory)
-                        .then(function (res) {
-                            self.goods = res.data;
-                        })
-                        .catch(function (err) {
+                    axios.put("/api/order/cancel/@Model",
+                        {  },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("access_token")
+                            }
 
-                        })
-                        .then(function () {
+                        }).then(function (res) {
+                        self.detail.orderStatus = 1;
 
-                        });
+                    }).catch(function (err) {
+                        if (err.response.status == 401) {
+                            window.location.href = "/account/login";
+                        } else
+                            alert(err.response.data);
+                    }).then(function () {
+
+                    });
                 }
             }
         });
-    </script>
-}
-@section Styles{
-    <style>
-        .goods li { display: flex; flex-direction: column; width: 220px; }
-        .goods li img { width: 220px; height: 220px; }
-        .goods li h5 { text-align: center; }
-        .goods li div { display: flex; justify-content: space-between; }
-        .action { text-align: right; margin: 10px 0; }
-        .action a { margin-left: 10px; }
-        .info { display: flex; justify-content: space-between; }
-    </style>
-}
+        </script>
+    }
+    @section Styles{
+        <style>
+            .goods li { display: flex; flex-direction: column; width: 220px; }
+            .goods li img { width: 220px; height: 220px; }
+            .goods li h5 { text-align: center; }
+            .goods li div { display: flex; justify-content: space-between; }
+            .action { text-align: right; margin: 10px 0; }
+            .action a { margin-left: 10px; }
+            .info { display: flex; justify-content: space-between; }
+        </style>
+    }
+</div>

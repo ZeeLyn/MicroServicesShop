@@ -51,7 +51,7 @@
     {
       "UpstreamPathTemplate": "/api/order/{everything}",
       "DownstreamPathTemplate": "/api/order/{everything}",
-      "UpstreamHttpMethod": [ "get" ],
+      "UpstreamHttpMethod": [ "get", "post", "put" ],
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
