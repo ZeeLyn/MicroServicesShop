@@ -100,12 +100,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - TZ=Asia/Shanghai
-      - uragano-service-id=basket_1
-      - uragano-service-name=Shop.Basket
-      - uragano-server-port=5004
-      - uragano-server-weight=100
-      - uragano-consul-addr=http://consul:8500
-      - uragano-consul-token=5ece74af-19d1-0e61-b25c-b9665d29f50b
+      - uragano_server_addr={LOCALIP}
+      - uragano_server_port=5004
+      - uragano_server_weight=100
+      - uragano_service_id={LOCALIP}:{uragano_server_port}
+      - uragano_service_name=Shop.Basket
+      - uragano_consul_addr=http://consul:8500
+      - uragano_consul_token=5ece74af-19d1-0e61-b25c-b9665d29f50b
     ports:
       - 5004:5004
     depends_on:

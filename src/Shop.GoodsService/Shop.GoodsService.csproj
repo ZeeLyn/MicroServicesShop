@@ -41,10 +41,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.407" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.407" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.407" />
-    <PackageReference Include="Uragano.Remoting" Version="0.0.1-preview.407" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Remoting" Version="0.0.1-preview.408" />
   </ItemGroup>
 
   <ItemGroup>

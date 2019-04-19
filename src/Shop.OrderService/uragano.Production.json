@@ -8,7 +8,7 @@
   },
   "Uragano": {
     "Server": {
-      "ip": "{LocalIP}",
+      "ip": "{LOCALIP}",
       "port": 5005,
       "certUrl": "",
       "certPwd": "",

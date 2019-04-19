@@ -10,9 +10,9 @@
     <PackageReference Include="JWT.Extension" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.407" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.407" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.407" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.1-preview.408" />
   </ItemGroup>
 
   <ItemGroup>
