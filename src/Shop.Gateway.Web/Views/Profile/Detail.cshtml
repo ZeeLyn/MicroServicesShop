@@ -25,66 +25,67 @@
             </div>
             <div class="action">
                 <a v-if="detail.payStatus==0&&detail.orderStatus==1" href="javascript:;" v-on:click="cancel()" class="btn btn-secondary btn-sm">Cancel</a>
-                <a v-if="detail.payStatus==0" :href="['/profile/order/detail/'+detail.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
+                <a v-if="detail.payStatus==0&&detail.orderStatus==1" :href="['/profile/order/detail/'+detail.orderCode]" class="btn btn-primary btn-sm">Pay now!</a>
             </div>
         </div>
     </template>
     @section Scripts{
         <script>
-        var app = new Vue({
-            el: "#app",
-            data: {
-                detail: {},
-                category: [],
-                currentCategory: 0,
-                goods: []
-            },
-            mounted: function() {
-                var self = this;
-                axios.get("http://localhost:9001/api/order/detail/@Model",
-                        {
-                            headers: {
-                                Authorization: "Bearer " + localStorage.getItem("access_token")
-                            }
-                        })
-                    .then(function(res) {
-                        self.detail = res.data;
-                    })
-                    .catch(function(err) {
-                        if (err.response.status == 401) {
-                            window.location.href = "/account/login";
-                        } else
-                            alert(err.response.data);
-                    })
-                    .then(function() {
-
-                    });
-            },
-            methods: {
-
-                cancel: function () {
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    detail: {},
+                    category: [],
+                    currentCategory: 0,
+                    goods: []
+                },
+                mounted: function() {
                     var self = this;
-                    axios.put("/api/order/cancel/@Model",
-                        {  },
-                        {
-                            headers: {
-                                Authorization: "Bearer " + localStorage.getItem("access_token")
-                            }
+                    axios.get("http://localhost:9001/api/order/detail/@Model",
+                            {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("access_token")
+                                }
+                            })
+                        .then(function(res) {
+                            self.detail = res.data;
+                        })
+                        .catch(function(err) {
+                            if (err.response.status == 401) {
+                                window.location.href = "/account/login";
+                            } else
+                                alert(err.response.data);
+                        })
+                        .then(function() {
 
-                        }).then(function (res) {
-                        self.detail.orderStatus = 1;
+                        });
+                },
+                methods: {
+                    cancel: function() {
+                        if (confirm("Are you sure cancel it?")) {
+                            var self = this;
+                            axios.put("/api/order/cancel/@Model",
+                                {},
+                                {
+                                    headers: {
+                                        Authorization: "Bearer " + localStorage.getItem("access_token")
+                                    }
 
-                    }).catch(function (err) {
-                        if (err.response.status == 401) {
-                            window.location.href = "/account/login";
-                        } else
-                            alert(err.response.data);
-                    }).then(function () {
+                                }).then(function(res) {
+                                self.detail.orderStatus = 0;
 
-                    });
+                            }).catch(function(err) {
+                                if (err.response.status == 401) {
+                                    window.location.href = "/account/login";
+                                } else
+                                    alert(err.response.data);
+                            }).then(function() {
+
+                            });
+                        }
+                    }
                 }
-            }
-        });
+            });
         </script>
     }
     @section Styles{
