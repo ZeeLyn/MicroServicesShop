@@ -10,8 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.1-preview.408" />
-    <PackageReference Include="Uragano.Core" Version="0.0.1-preview.408" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.1" />
+    <PackageReference Include="Uragano.Core" Version="0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
