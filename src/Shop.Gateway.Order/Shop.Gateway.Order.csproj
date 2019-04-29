@@ -14,9 +14,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.3" />
-    <PackageReference Include="Uragano.Core" Version="0.0.3" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.3" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.4" />
+    <PackageReference Include="Uragano.Core" Version="0.0.4" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -29,16 +29,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSRedisCore" Version="3.0.52" />
+    <PackageReference Include="CSRedisCore" Version="3.0.53" />
     <PackageReference Include="DotNetCore.CAP.MySql" Version="2.5.0" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.5.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.3" />
-    <PackageReference Include="Uragano.Core" Version="0.0.3" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.3" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.4" />
+    <PackageReference Include="Uragano.Core" Version="0.0.4" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.4" />
   </ItemGroup>
 
   <ItemGroup>

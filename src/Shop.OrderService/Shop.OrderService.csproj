@@ -39,9 +39,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
-    <PackageReference Include="Uragano.Consul" Version="0.0.3" />
-    <PackageReference Include="Uragano.Core" Version="0.0.3" />
-    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.3" />
+    <PackageReference Include="Uragano.Consul" Version="0.0.4" />
+    <PackageReference Include="Uragano.Core" Version="0.0.4" />
+    <PackageReference Include="Uragano.Logging.Exceptionless" Version="0.0.4" />
   </ItemGroup>
 
   <ItemGroup>
